@@ -73,36 +73,68 @@ export const experiences: Experience[] = [
   },
 ];
 
-// ── Skills ────────────────────────────────────────────────────────
 export const skills: SkillCategory[] = [
+  {
+    category: 'Languages',
+    icon: '⌘',
+    items: [
+      { name: 'TypeScript' },
+      { name: 'JavaScript' },
+      { name: 'Python' },
+      { name: 'Java' },
+      { name: 'C++' },
+      { name: 'SQL' },
+      { name: 'PHP' },
+    ],
+  },
   {
     category: 'Frontend',
     icon: '◆',
     items: [
-      { name: 'React', level: 90 },
-      { name: 'Next.js', level: 85 },
-      { name: 'Tailwind CSS', level: 88 },
-      { name: 'Framer Motion', level: 75 },
+      { name: 'React' },
+      { name: 'Next.js' },
+      { name: 'Tailwind CSS' },
+      { name: 'HTML/CSS' },
     ],
   },
   {
     category: 'Backend',
     icon: '▲',
     items: [
-      { name: 'Node.js', level: 85 },
-      { name: 'Express.js', level: 82 },
-      { name: 'FastAPI', level: 80 },
-      { name: 'REST APIs', level: 90 },
+      { name: 'Node.js' },
+      { name: 'Express.js' },
+      { name: 'FastAPI' },
+      { name: 'Flask' },
+      { name: 'REST APIs' },
     ],
   },
   {
-    category: 'Data & Mobile',
+    category: 'Database & Cloud',
+    icon: '◉',
+    items: [
+      { name: 'PostgreSQL' },
+      { name: 'MySQL' },
+      { name: 'Firebase' },
+      { name: 'Firestore' },
+      { name: 'MongoDB' },
+    ],
+  },
+  {
+    category: 'Mobile',
     icon: '●',
     items: [
-      { name: 'PostgreSQL', level: 85 },
-      { name: 'MySQL', level: 80 },
-      { name: 'React Native', level: 88 },
-      { name: 'Firebase', level: 85 },
+      { name: 'React Native' },
+      { name: 'Expo' },
+    ],
+  },
+  {
+    category: 'Tools & DevOps',
+    icon: '⚙',
+    items: [
+      { name: 'Git' },
+      { name: 'Docker' },
+      { name: 'Vercel' },
+      { name: 'Figma' },
     ],
   },
 ];
@@ -115,11 +147,10 @@ export const terminalSkills = [
 
 // ── About Section - Personal Tags ─────────────────────────────────
 export const personalTags = [
-  'Delhi NCR',
+  'Student',
   'Full Stack Developer',
   'Hackathon Winner',
-  'Christ University BCA',
-  'AI Integration',
+  'Industry Experience',
 ];
 
 // ── About Section - Milestones ────────────────────────────────────

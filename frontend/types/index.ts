@@ -27,7 +27,6 @@ export interface SkillCategory {
 
 export interface Skill {
   name: string;
-  level: number; // 0-100
 }
 
 export interface Milestone {

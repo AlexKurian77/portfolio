@@ -151,20 +151,44 @@ body {
   background: rgba(200, 169, 126, 0.1);
 }
 
-/* ── Skill bar ────────────────────────────────────────────────── */
-.skill-bar {
-  height: 2px;
-  background: var(--surface);
-  border-radius: 1px;
-  overflow: hidden;
-  position: relative;
+/* ── Bento Grid ──────────────────────────────────────────────── */
+.bento-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
 }
 
-.skill-bar-fill {
-  height: 100%;
-  background: linear-gradient(90deg, var(--gold-dark), var(--gold), var(--gold-light));
-  border-radius: 1px;
-  transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+@media (max-width: 560px) {
+  .bento-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.bento-card {
+  background: rgba(42, 42, 42, 0.35);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(200, 169, 126, 0.08);
+  border-radius: 14px;
+  padding: 16px;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ── Skill Tag ───────────────────────────────────────────────── */
+.skill-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(200, 169, 126, 0.15);
+  color: #F0EDE6;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  line-height: 1.4;
+  white-space: nowrap;
+  transition: all 0.25s ease;
 }
 
 /* ── Glass card ───────────────────────────────────────────────── */

@@ -9,8 +9,8 @@ const containerVariants = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.12,
-      delayChildren: 0.2,
+      staggerChildren: 0.08,
+      delayChildren: 0.08,
     },
   },
 };
@@ -20,7 +20,7 @@ const cardVariants = {
   visible: {
     opacity: 1,
     x: 0,
-    transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] as const },
+    transition: { duration: 0.45, ease: [0.16, 1, 0.3, 1] as const },
   },
 };
 

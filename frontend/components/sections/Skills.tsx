@@ -9,18 +9,49 @@ const containerVariants = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.08,
-      delayChildren: 0.2,
+      staggerChildren: 0.06,
+      delayChildren: 0.08,
     },
   },
 };
 
-const itemVariants = {
+const cardVariants = {
+  hidden: { opacity: 0, y: 24, scale: 0.96 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: { duration: 0.45, ease: [0.16, 1, 0.3, 1] as const },
+  },
+};
+
+const tagContainerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.02,
+      delayChildren: 0.08,
+    },
+  },
+};
+
+const tagVariants = {
+  hidden: { opacity: 0, scale: 0.8, y: 6 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    y: 0,
+    transition: { duration: 0.25, ease: [0.16, 1, 0.3, 1] as const },
+  },
+};
+
+const headerVariants = {
   hidden: { opacity: 0, y: 15 },
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] as const },
+    transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] as const },
   },
 };
 
@@ -55,7 +86,7 @@ export default function Skills({ isActive }: SkillsProps) {
         className="w-full md:w-auto md:ml-[6%]"
       >
         {/* Section tag */}
-        <motion.div variants={itemVariants}>
+        <motion.div variants={headerVariants}>
           <span
             style={{
               fontFamily: "'DM Mono', monospace",
@@ -70,14 +101,14 @@ export default function Skills({ isActive }: SkillsProps) {
         </motion.div>
 
         <motion.h2
-          variants={itemVariants}
+          variants={headerVariants}
           style={{
             fontFamily: "'Outfit', sans-serif",
             fontSize: 'clamp(1.5rem, 3vw, 2rem)',
             fontWeight: 600,
             color: '#F0EDE6',
             marginTop: '16px',
-            marginBottom: '32px',
+            marginBottom: '36px',
             letterSpacing: '-0.02em',
             lineHeight: 1.2,
           }}
@@ -88,26 +119,36 @@ export default function Skills({ isActive }: SkillsProps) {
           </span>
         </motion.h2>
 
-        {/* Skill categories */}
-        <div 
-          style={{ 
-            display: 'grid', 
-            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', 
-            gap: '32px 48px' 
-          }}
-        >
+        {/* Bento Grid */}
+        <div className="bento-grid">
           {skills.map((category) => (
-            <motion.div key={category.category} variants={itemVariants}>
+            <motion.div
+              key={category.category}
+              variants={cardVariants}
+              className="bento-card"
+              whileHover={{
+                borderColor: 'rgba(200, 169, 126, 0.25)',
+                boxShadow: '0 8px 32px rgba(0,0,0,0.35), 0 0 0 1px rgba(200,169,126,0.12)',
+                y: -3,
+              }}
+              transition={{ duration: 0.3 }}
+            >
               {/* Category header */}
               <div
                 style={{
                   display: 'flex',
                   alignItems: 'center',
                   gap: '8px',
-                  marginBottom: '16px',
+                  marginBottom: '14px',
                 }}
               >
-                <span style={{ color: '#C8A97E', fontSize: '12px' }}>
+                <span
+                  style={{
+                    color: '#C8A97E',
+                    fontSize: '13px',
+                    lineHeight: 1,
+                  }}
+                >
                   {category.icon}
                 </span>
                 <span
@@ -123,51 +164,34 @@ export default function Skills({ isActive }: SkillsProps) {
                 </span>
               </div>
 
-              {/* Skills list */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+              {/* Skill tags */}
+              <motion.div
+                variants={tagContainerVariants}
+                initial="hidden"
+                animate={isActive ? 'visible' : 'hidden'}
+                style={{
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                  gap: '8px',
+                }}
+              >
                 {category.items.map((skill) => (
-                  <div key={skill.name}>
-                    <div
-                      style={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        marginBottom: '6px',
-                      }}
-                    >
-                      <span
-                        style={{
-                          fontFamily: "'Inter', sans-serif",
-                          fontSize: '12px',
-                          color: '#F0EDE6',
-                        }}
-                      >
-                        {skill.name}
-                      </span>
-                      <span
-                        style={{
-                          fontFamily: "'DM Mono', monospace",
-                          fontSize: '10px',
-                          color: '#8A8A8A',
-                        }}
-                      >
-                        {skill.level}%
-                      </span>
-                    </div>
-                    <div className="skill-bar">
-                      <motion.div
-                        className="skill-bar-fill"
-                        initial={{ width: 0 }}
-                        animate={isActive ? { width: `${skill.level}%` } : { width: 0 }}
-                        transition={{
-                          duration: 1.2,
-                          ease: [0.16, 1, 0.3, 1] as const,
-                          delay: 0.3,
-                        }}
-                      />
-                    </div>
-                  </div>
+                  <motion.span
+                    key={skill.name}
+                    variants={tagVariants}
+                    className="skill-tag"
+                    whileHover={{
+                      borderColor: 'rgba(200, 169, 126, 0.5)',
+                      background: 'rgba(200, 169, 126, 0.12)',
+                      scale: 1.05,
+                      boxShadow: '0 0 12px rgba(200, 169, 126, 0.12)',
+                    }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    {skill.name}
+                  </motion.span>
                 ))}
-              </div>
+              </motion.div>
             </motion.div>
           ))}
         </div>
