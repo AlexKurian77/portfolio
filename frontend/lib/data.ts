@@ -126,7 +126,7 @@ export const personalTags = [
 export const milestones: Milestone[] = [
   {
     id: 'gpa',
-    title: '9 CGPA',
+    title: '9.0 CGPA',
     subtitle: 'BCA at Christ University',
     icon: 'GraduationCap',
   },

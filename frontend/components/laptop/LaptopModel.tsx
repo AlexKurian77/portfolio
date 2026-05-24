@@ -55,7 +55,7 @@ function Keyboard() {
       </RoundedBox>
       <instancedMesh ref={meshRef} args={[undefined, undefined, 100]} castShadow receiveShadow>
         <boxGeometry args={[1, 1, 0]} />
-        <meshStandardMaterial color="#393838ff" metalness={0.6} roughness={0.4} />
+        <meshStandardMaterial color={"#ffffff"} metalness={0.6} roughness={0.4} />
       </instancedMesh>
     </group>
   );
@@ -124,7 +124,7 @@ const LaptopModel = forwardRef<THREE.Group, LaptopModelProps>(
             smoothness={4}
             position={[0, 0.048, 0.73]}
           >
-            <meshStandardMaterial color="#393838" roughness={0.5} metalness={0.12} />
+            <meshStandardMaterial color="#3c3c3c" roughness={0.5} metalness={0.12} />
           </RoundedBox>
         </group>
 

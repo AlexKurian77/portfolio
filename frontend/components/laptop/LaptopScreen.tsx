@@ -96,7 +96,7 @@ function HeroScreenContent() {
 // ── About Screen ───────────────────────────────────────────────
 function AboutScreenContent() {
   const items = [
-    { label: '9 CGPA', sub: 'Computer Science' },
+    { label: '9.0 CGPA', sub: 'Computer Science' },
     { label: 'Warsaw', sub: 'International Internship' },
     { label: 'SIH Finalist', sub: 'Smart India Hackathon' },
   ];
