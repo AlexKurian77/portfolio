@@ -1,27 +1,26 @@
-'use client';
+"use client";
 
-import React, { useState, useCallback, useEffect, Suspense, lazy } from 'react';
-import dynamic from 'next/dynamic';
-import { useScrollProgress } from '@/hooks/useScrollProgress';
-import { initSmoothScroll, destroySmoothScroll } from '@/lib/smoothScroll';
-import { SCROLL_HEIGHT_VH, MOBILE_BREAKPOINT } from '@/lib/constants';
+import React, { useState, useCallback, useEffect, Suspense, lazy } from "react";
+import dynamic from "next/dynamic";
+import { useScrollProgress } from "@/hooks/useScrollProgress";
+import { initSmoothScroll, destroySmoothScroll } from "@/lib/smoothScroll";
+import { SCROLL_HEIGHT_VH, MOBILE_BREAKPOINT } from "@/lib/constants";
 
 // Dynamic imports for heavy components
-const LaptopScene = dynamic(
-  () => import('@/components/laptop/LaptopScene'),
-  { ssr: false }
-);
+const LaptopScene = dynamic(() => import("@/components/laptop/LaptopScene"), {
+  ssr: false,
+});
 
-import Preloader from '@/components/ui/Preloader';
-import CustomCursor from '@/components/ui/CustomCursor';
-import SectionLabel from '@/components/ui/SectionLabel';
-import NavDots from '@/components/ui/NavDots';
-import Hero from '@/components/sections/Hero';
-import About from '@/components/sections/About';
-import Skills from '@/components/sections/Skills';
-import Experience from '@/components/sections/Experience';
-import Projects from '@/components/sections/Projects';
-import Contact from '@/components/sections/Contact';
+import Preloader from "@/components/ui/Preloader";
+import CustomCursor from "@/components/ui/CustomCursor";
+import SectionLabel from "@/components/ui/SectionLabel";
+import NavDots from "@/components/ui/NavDots";
+import Hero from "@/components/sections/Hero";
+import About from "@/components/sections/About";
+import Skills from "@/components/sections/Skills";
+import Experience from "@/components/sections/Experience";
+import Projects from "@/components/sections/Projects";
+import Contact from "@/components/sections/Contact";
 
 export default function Home() {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -35,8 +34,8 @@ export default function Home() {
       setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
     };
     checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
   // Initialize smooth scroll
@@ -76,32 +75,32 @@ export default function Home() {
         <>
           <SectionLabel currentPhase={currentPhase} />
           <NavDots currentPhase={currentPhase} />
-          
+
           <a
             href="/Resume.pdf"
             target="_blank"
             rel="noopener noreferrer"
             className="glass-card"
             style={{
-              position: 'fixed',
-              top: '2rem',
-              right: '2rem',
+              position: "fixed",
+              top: "2rem",
+              right: "2rem",
               zIndex: 50,
-              padding: '10px 20px',
-              color: '#C8A97E',
-              fontSize: '12px',
+              padding: "10px 20px",
+              color: "#C8A97E",
+              fontSize: "12px",
               fontFamily: "'DM Mono', monospace",
-              textTransform: 'uppercase',
-              letterSpacing: '0.1em',
-              textDecoration: 'none',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-              border: '1px solid rgba(200,169,126,0.3)',
-              borderRadius: '4px',
-              background: 'rgba(200,169,126,0.05)',
-              pointerEvents: 'auto',
-              backdropFilter: 'blur(8px)',
+              textTransform: "uppercase",
+              letterSpacing: "0.1em",
+              textDecoration: "none",
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
+              border: "1px solid rgba(200,169,126,0.3)",
+              borderRadius: "4px",
+              background: "rgba(200,169,126,0.05)",
+              pointerEvents: "auto",
+              backdropFilter: "blur(8px)",
             }}
           >
             Resume
@@ -113,19 +112,19 @@ export default function Home() {
       <div
         id="scroll-container"
         style={{
-          position: 'relative',
+          position: "relative",
           zIndex: 10,
           height: `${SCROLL_HEIGHT_VH}vh`,
-          pointerEvents: 'none',
+          pointerEvents: "none",
         }}
       >
         {/* Phase 1: Hero */}
         <div
           style={{
-            height: '12%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
+            height: "12%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
           }}
         >
           <Hero />
@@ -134,46 +133,46 @@ export default function Home() {
         {/* Phase 2: About */}
         <div
           style={{
-            height: '18%',
-            display: 'flex',
-            alignItems: 'center',
+            height: "18%",
+            display: "flex",
+            alignItems: "center",
           }}
         >
-          <About isActive={currentPhase === 'about'} />
+          <About isActive={currentPhase === "about"} />
         </div>
 
         {/* Phase 3: Skills */}
         <div
           style={{
-            height: '18%',
-            display: 'flex',
-            alignItems: 'center',
+            height: "18%",
+            display: "flex",
+            alignItems: "center",
           }}
         >
-          <Skills isActive={currentPhase === 'skills'} />
+          <Skills isActive={currentPhase === "skills"} />
         </div>
 
         {/* Phase 4: Experience */}
         <div
           style={{
-            height: '18%',
-            display: 'flex',
-            alignItems: 'center',
+            height: "18%",
+            display: "flex",
+            alignItems: "center",
           }}
         >
-          <Experience isActive={currentPhase === 'experience'} />
+          <Experience isActive={currentPhase === "experience"} />
         </div>
 
         {/* Phase 5: Projects */}
         <div
           style={{
-            height: '19%',
-            display: 'flex',
-            alignItems: 'center',
+            height: "19%",
+            display: "flex",
+            alignItems: "center",
           }}
         >
           <Projects
-            isActive={currentPhase === 'projects'}
+            isActive={currentPhase === "projects"}
             onProjectHover={handleProjectHover}
           />
         </div>
@@ -181,13 +180,13 @@ export default function Home() {
         {/* Phase 6: Contact */}
         <div
           style={{
-            height: '15%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
+            height: "15%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
           }}
         >
-          <Contact isActive={currentPhase === 'contact'} />
+          <Contact isActive={currentPhase === "contact"} />
         </div>
       </div>
     </>

@@ -1,12 +1,12 @@
 import { ScrollBreakpoints } from '@/types';
 
 export const SCROLL_BREAKPOINTS: ScrollBreakpoints = {
-  hero:       { start: 0.00, end: 0.12 },
-  about:      { start: 0.12, end: 0.30 },
-  skills:     { start: 0.30, end: 0.48 },
-  experience: { start: 0.48, end: 0.66 },
-  projects:   { start: 0.66, end: 0.85 },
-  contact:    { start: 0.85, end: 1.00 },
+  hero:       { start: 0.00, end: 0.09 },
+  about:      { start: 0.09, end: 0.25 },
+  skills:     { start: 0.25, end: 0.42 },
+  experience: { start: 0.42, end: 0.70 },
+  projects:   { start: 0.70, end: 0.90 },
+  contact:    { start: 0.90, end: 1.00 },
 };
 
 // ── Color Palette ─────────────────────────────────────────────────

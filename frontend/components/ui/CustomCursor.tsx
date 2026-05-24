@@ -1,18 +1,13 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
-import { motion, useMotionValue, useSpring } from 'framer-motion';
-import { TIMING } from '@/lib/constants';
+import { useEffect, useState } from 'react';
+import { motion, useMotionValue } from 'framer-motion';
 
 export default function CustomCursor() {
   const [isHovering, setIsHovering] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const cursorX = useMotionValue(-100);
   const cursorY = useMotionValue(-100);
-
-  const springConfig = TIMING.cursorSpring;
-  const x = useSpring(cursorX, springConfig);
-  const y = useSpring(cursorY, springConfig);
 
   useEffect(() => {
     // Only show on devices with fine pointers
@@ -67,8 +62,8 @@ export default function CustomCursor() {
       <motion.div
         style={{
           position: 'fixed',
-          left: x,
-          top: y,
+          left: cursorX,
+          top: cursorY,
           width: isHovering ? 8 : 6,
           height: isHovering ? 8 : 6,
           borderRadius: '50%',
@@ -83,8 +78,8 @@ export default function CustomCursor() {
       <motion.div
         style={{
           position: 'fixed',
-          left: x,
-          top: y,
+          left: cursorX,
+          top: cursorY,
           width: isHovering ? 48 : 32,
           height: isHovering ? 48 : 32,
           borderRadius: '50%',
