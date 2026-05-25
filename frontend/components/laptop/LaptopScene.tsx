@@ -211,7 +211,7 @@ function SceneContent({
           </LaptopModel>
 
           {/* Title for Message phase on Desktop */}
-          <Html center position={[0, 2.5, -1.05]}>
+          <Html center position={[0, 2.5, -1.05]} style={{ pointerEvents: 'none' }}>
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{
@@ -263,7 +263,7 @@ export default function LaptopScene({
         position: 'fixed',
         inset: 0,
         zIndex: currentPhase === 'message' ? 20 : 0,
-        pointerEvents: currentPhase === 'message' ? 'auto' : 'none',
+        pointerEvents: currentPhase === 'message' || currentPhase === 'projects' ? 'auto' : 'none',
       }}
     >
       <Canvas

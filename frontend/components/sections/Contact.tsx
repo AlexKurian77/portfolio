@@ -75,6 +75,7 @@ export default function Contact({ isActive }: ContactProps) {
           flexDirection: 'column',
           alignItems: 'center',
           gap: '24px',
+          pointerEvents: isActive ? 'auto' : 'none',
         }}
       >
         {/* Gold star */}
