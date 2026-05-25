@@ -2,8 +2,9 @@
 
 import React, { useRef, useEffect, useMemo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { PerspectiveCamera, Float } from '@react-three/drei';
+import { PerspectiveCamera, Float, Html } from '@react-three/drei';
 import * as THREE from 'three';
+import { motion } from 'framer-motion';
 import gsap from 'gsap';
 import LaptopModel from './LaptopModel';
 import LaptopScreen from './LaptopScreen';
@@ -208,6 +209,35 @@ function SceneContent({
               lidRef={lidRef}
             />
           </LaptopModel>
+
+          {/* Title for Message phase on Desktop */}
+          <Html center position={[0, 2.5, -1.05]}>
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{
+                opacity: currentPhase === 'message' ? 1 : 0,
+                y: currentPhase === 'message' ? 0 : 10,
+              }}
+              transition={{ duration: 0.5 }}
+              style={{
+                pointerEvents: 'none',
+                textAlign: 'center',
+                whiteSpace: 'nowrap',
+                userSelect: 'none',
+              }}
+            >
+              <h2 style={{
+                fontFamily: "'Outfit', sans-serif",
+                fontSize: '2rem',
+                fontWeight: 300,
+                color: '#F0EDE6',
+                margin: 0,
+                letterSpacing: '-0.02em',
+              }}>
+                Send a <span className="gold-gradient-text" style={{ fontWeight: 500 }}>message</span>
+              </h2>
+            </motion.div>
+          </Html>
         </group>
       </Float>
 

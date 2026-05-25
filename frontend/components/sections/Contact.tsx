@@ -55,16 +55,15 @@ export default function Contact({ isActive }: ContactProps) {
   return (
     <section
       id="contact"
-      className="section"
+      className="section max-md:!relative md:!fixed md:!top-0 md:!left-0 md:!w-full md:!h-screen"
       style={{
-        minHeight: '100vh',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        position: 'relative',
-        zIndex: 10,
+        zIndex: 5,
         textAlign: 'center',
+        pointerEvents: isActive ? 'auto' : 'none',
       }}
     >
       <motion.div

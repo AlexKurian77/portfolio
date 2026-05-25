@@ -21,6 +21,7 @@ import Skills from "@/components/sections/Skills";
 import Experience from "@/components/sections/Experience";
 import Projects from "@/components/sections/Projects";
 import Contact from "@/components/sections/Contact";
+import Message from "@/components/sections/Message";
 
 export default function Home() {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -198,7 +199,7 @@ export default function Home() {
             justifyContent: "center",
           }}
         >
-          {/* Laptop is front and center here with the contact form on screen */}
+          <Message isActive={currentPhase === "message"} />
         </div>
       </div>
     </>
