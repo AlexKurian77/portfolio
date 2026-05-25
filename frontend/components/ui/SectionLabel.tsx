@@ -15,6 +15,7 @@ const labels: Record<ScrollPhase, string> = {
   experience: '<section.experience />',
   projects: '<section.projects />',
   contact: '<section.contact />',
+  message: '<section.message />',
 };
 
 export default function SectionLabel({ currentPhase }: SectionLabelProps) {

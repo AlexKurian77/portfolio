@@ -63,10 +63,11 @@ function Keyboard() {
 
 interface LaptopModelProps {
   lidRef: React.RefObject<THREE.Group | null>;
+  children?: React.ReactNode;
 }
 
 const LaptopModel = forwardRef<THREE.Group, LaptopModelProps>(
-  function LaptopModel({ lidRef }, ref) {
+  function LaptopModel({ lidRef, children }, ref) {
     const bodyMaterial = new THREE.MeshStandardMaterial({
       color: '#1a1a1a',
       metalness: 0.8,
@@ -182,6 +183,9 @@ const LaptopModel = forwardRef<THREE.Group, LaptopModelProps>(
             >
               <primitive object={edgeMaterial} attach="material" />
             </RoundedBox>
+
+            {/* Screen content (e.g. Html) */}
+            {children}
           </group>
         </group>
       </group>

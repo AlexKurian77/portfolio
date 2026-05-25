@@ -2,6 +2,8 @@
 
 import React, { useMemo, useState, useEffect, useRef } from "react";
 import { Html } from "@react-three/drei";
+import { useFrame } from "@react-three/fiber";
+import * as THREE from "three";
 import { terminalSkills, projects, experiences } from "@/lib/data";
 import { TIMING } from "@/lib/constants";
 import { Globe, GraduationCap, Trophy, MapPin, Activity, Code2, Sparkles, Terminal } from "lucide-react";
@@ -10,6 +12,7 @@ import { motion, AnimatePresence } from "framer-motion";
 interface LaptopScreenProps {
   activeProject?: string | null;
   currentPhase: string;
+  lidRef?: React.RefObject<THREE.Group | null>;
 }
 
 // ── Hero Screen (Animated Profile Boot) ────────────────────────
@@ -1157,61 +1160,314 @@ function ContactScreenContent() {
   );
 }
 
+// ── Message Screen (Contact Form) ──────────────────────────────
+function MessageScreenContent() {
+  const [formState, setFormState] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
+  const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' });
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setFormState('sending');
+
+    try {
+      const res = await fetch('https://formspree.io/f/mvzybnvk', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          _subject: formData.subject,
+          message: formData.message,
+        }),
+      });
+
+      if (res.ok) {
+        setFormState('sent');
+        setFormData({ name: '', email: '', subject: '', message: '' });
+      } else {
+        setFormState('error');
+      }
+    } catch {
+      setFormState('error');
+    }
+  };
+
+  if (formState === 'sent') {
+    return (
+      <div
+        style={{
+          width: '100%',
+          height: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: '#060b13',
+          fontFamily: "'DM Mono', monospace",
+          gap: '8px',
+        }}
+      >
+        <motion.div
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ type: 'spring', bounce: 0.5 }}
+          style={{ fontSize: '20px' }}
+        >
+          ✓
+        </motion.div>
+        <motion.div
+          initial={{ opacity: 0, y: 5 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          style={{ fontSize: '10px', color: '#4ade80', letterSpacing: '0.1em' }}
+        >
+          MESSAGE SENT
+        </motion.div>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.6 }}
+          style={{ fontSize: '8px', color: '#6e7681', marginTop: '4px' }}
+        >
+          I&apos;ll get back to you soon!
+        </motion.div>
+      </div>
+    );
+  }
+
+  return (
+    <div
+      style={{
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        background: '#060b13',
+        fontFamily: "'DM Mono', monospace",
+        padding: '10px 14px',
+        overflow: 'hidden',
+        position: 'relative',
+      }}
+    >
+      {/* Background grid */}
+      <div
+        style={{
+          position: 'absolute',
+          inset: 0,
+          backgroundSize: '20px 20px',
+          backgroundImage:
+            'linear-gradient(to right, rgba(200, 169, 126, 0.03) 1px, transparent 1px), linear-gradient(to bottom, rgba(200, 169, 126, 0.03) 1px, transparent 1px)',
+          maskImage: 'radial-gradient(ellipse at center, black 40%, transparent 80%)',
+          WebkitMaskImage: 'radial-gradient(ellipse at center, black 40%, transparent 80%)',
+          zIndex: 0,
+        }}
+      />
+
+      <div style={{ position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', height: '100%' }}>
+        {/* Header */}
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px',
+            marginBottom: '6px',
+            paddingBottom: '4px',
+            borderBottom: '1px solid rgba(200, 169, 126, 0.1)',
+          }}
+        >
+          <div style={{ display: 'flex', gap: '3px' }}>
+            <div style={{ width: 5, height: 5, borderRadius: '50%', background: '#FF5F57' }} />
+            <div style={{ width: 5, height: 5, borderRadius: '50%', background: '#FEBC2E' }} />
+            <div style={{ width: 5, height: 5, borderRadius: '50%', background: '#28C840' }} />
+          </div>
+          <span style={{ fontSize: '7px', color: '#484f58', marginLeft: '4px' }}>
+            compose_message.sh
+          </span>
+        </div>
+
+        {/* Form */}
+        <form
+          onSubmit={handleSubmit}
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '6px',
+            flex: 1,
+          }}
+        >
+          {/* Name field */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <span style={{ fontSize: '7px', color: '#C8A97E', width: '40px', flexShrink: 0 }}>
+              NAME
+            </span>
+            <input
+              type="text"
+              value={formData.name}
+              onChange={(e) => setFormData((d) => ({ ...d, name: e.target.value }))}
+              required
+              placeholder="Your name"
+              style={{
+                flex: 1,
+                background: 'rgba(200, 169, 126, 0.04)',
+                border: '1px solid rgba(200, 169, 126, 0.12)',
+                borderRadius: '3px',
+                padding: '4px 6px',
+                fontSize: '8px',
+                color: '#E8D5B0',
+                fontFamily: "'DM Mono', monospace",
+                outline: 'none',
+              }}
+            />
+          </div>
+
+          {/* Email field */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <span style={{ fontSize: '7px', color: '#C8A97E', width: '40px', flexShrink: 0 }}>
+              EMAIL
+            </span>
+            <input
+              type="email"
+              value={formData.email}
+              onChange={(e) => setFormData((d) => ({ ...d, email: e.target.value }))}
+              required
+              placeholder="your@email.com"
+              style={{
+                flex: 1,
+                background: 'rgba(200, 169, 126, 0.04)',
+                border: '1px solid rgba(200, 169, 126, 0.12)',
+                borderRadius: '3px',
+                padding: '4px 6px',
+                fontSize: '8px',
+                color: '#E8D5B0',
+                fontFamily: "'DM Mono', monospace",
+                outline: 'none',
+              }}
+            />
+          </div>
+
+          {/* Subject field */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <span style={{ fontSize: '7px', color: '#C8A97E', width: '40px', flexShrink: 0 }}>
+              SUBJ
+            </span>
+            <input
+              type="text"
+              value={formData.subject}
+              onChange={(e) => setFormData((d) => ({ ...d, subject: e.target.value }))}
+              required
+              placeholder="Subject"
+              style={{
+                flex: 1,
+                background: 'rgba(200, 169, 126, 0.04)',
+                border: '1px solid rgba(200, 169, 126, 0.12)',
+                borderRadius: '3px',
+                padding: '4px 6px',
+                fontSize: '8px',
+                color: '#E8D5B0',
+                fontFamily: "'DM Mono', monospace",
+                outline: 'none',
+              }}
+            />
+          </div>
+
+          {/* Message field */}
+          <div style={{ display: 'flex', gap: '6px', flex: 1 }}>
+            <span style={{ fontSize: '7px', color: '#C8A97E', width: '40px', flexShrink: 0, paddingTop: '4px' }}>
+              MSG
+            </span>
+            <textarea
+              value={formData.message}
+              onChange={(e) => setFormData((d) => ({ ...d, message: e.target.value }))}
+              required
+              placeholder="Write your message..."
+              style={{
+                flex: 1,
+                background: 'rgba(200, 169, 126, 0.04)',
+                border: '1px solid rgba(200, 169, 126, 0.12)',
+                borderRadius: '3px',
+                padding: '4px 6px',
+                fontSize: '8px',
+                color: '#E8D5B0',
+                fontFamily: "'DM Mono', monospace",
+                outline: 'none',
+                resize: 'none',
+                minHeight: '50px',
+              }}
+            />
+          </div>
+
+          {/* Submit button */}
+          <button
+            type="submit"
+            disabled={formState === 'sending'}
+            style={{
+              alignSelf: 'flex-end',
+              background: formState === 'sending'
+                ? 'rgba(200, 169, 126, 0.1)'
+                : 'rgba(200, 169, 126, 0.15)',
+              border: '1px solid rgba(200, 169, 126, 0.25)',
+              borderRadius: '3px',
+              padding: '4px 12px',
+              fontSize: '7px',
+              color: '#C8A97E',
+              fontFamily: "'DM Mono', monospace",
+              letterSpacing: '0.1em',
+              textTransform: 'uppercase',
+              cursor: formState === 'sending' ? 'wait' : 'pointer',
+              transition: 'all 0.2s',
+            }}
+          >
+            {formState === 'sending' ? '⠿ Sending...' : formState === 'error' ? '✗ Retry' : '→ Send'}
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+}
+
 // ── Main Screen Component ──────────────────────────────────────
 export default function LaptopScreen({
   activeProject,
   currentPhase,
+  lidRef,
 }: LaptopScreenProps) {
   const [bootState, setBootState] = useState<
     "off" | "booting" | "on" | "turning_off"
   >("off");
-  const [hasBooted, setHasBooted] = useState(false);
 
+  const bootStateRef = useRef(bootState);
+  
   useEffect(() => {
-    // Wait for the lid to fully open (using the same timings from LaptopScene)
-    const lidTotalTime = (TIMING.lidOpenDelay + TIMING.lidOpenDuration) * 1000;
+    bootStateRef.current = bootState;
+  }, [bootState]);
 
-    const startBootTimer = setTimeout(() => {
+  useFrame(() => {
+    if (!lidRef?.current) return;
+    const rotX = lidRef.current.rotation.x;
+    const current = bootStateRef.current;
+
+    // Lid is fully open at 0, closed at -1.57
+    if (rotX > -0.05 && (current === "off" || current === "turning_off")) {
       setBootState("booting");
-      setHasBooted(true);
-    }, lidTotalTime);
-
-    return () => {
-      clearTimeout(startBootTimer);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (!hasBooted) return;
-
-    if (
-      currentPhase === "contact" &&
-      bootState !== "off" &&
-      bootState !== "turning_off"
-    ) {
-      setBootState("turning_off");
-    } else if (
-      currentPhase !== "contact" &&
-      (bootState === "off" || bootState === "turning_off")
-    ) {
-      setBootState("booting");
+    } else if (rotX < -0.1 && (current === "on" || current === "booting")) {
+      setBootState("off");
     }
-  }, [currentPhase, hasBooted, bootState]);
+  });
 
   useEffect(() => {
-    if (hasBooted && bootState === "booting") {
+    if (bootState === "booting") {
       const finishBootTimer = setTimeout(() => {
         setBootState("on");
       }, 2000);
       return () => clearTimeout(finishBootTimer);
     }
-    if (hasBooted && bootState === "turning_off") {
+    if (bootState === "turning_off") {
       const powerOffTimer = setTimeout(() => {
         setBootState("off");
-      }, 800);
+      }, 300); // Faster turn-off to avoid clipping
       return () => clearTimeout(powerOffTimer);
     }
-  }, [bootState, hasBooted]);
+  }, [bootState]);
 
   const screenContent = useMemo(() => {
     switch (currentPhase) {
@@ -1227,15 +1483,22 @@ export default function LaptopScreen({
         return <ProjectScreenContent projectId={activeProject} />;
       case "contact":
         return <ContactScreenContent />;
+      case "message":
+        return <MessageScreenContent />;
       default:
         return <HeroScreenContent />;
     }
   }, [currentPhase, activeProject]);
 
+  // Don't render screen at all when lid is closed (contact phase)
+  if (currentPhase === "contact") {
+    return null;
+  }
+
   return (
     <Html
       transform
-      position={[0, 1.09, -1.015]}
+      position={[0, 0.02, 0.034]}
       scale={0.35}
       style={{
         width: "320px",
@@ -1264,7 +1527,7 @@ export default function LaptopScreen({
               }
             : bootState === "turning_off"
               ? {
-                  duration: 0.8,
+                  duration: 0.3,
                   ease: "linear",
                   times: [0, 0.2, 0.4, 0.6, 0.8, 1],
                 }

@@ -10,7 +10,7 @@ interface NavDotsProps {
   currentPhase: ScrollPhase;
 }
 
-const phases: ScrollPhase[] = ['hero', 'about', 'skills', 'experience', 'projects', 'contact'];
+const phases: ScrollPhase[] = ['hero', 'about', 'skills', 'experience', 'projects', 'contact', 'message'];
 
 const phaseLabels: Record<ScrollPhase, string> = {
   hero: 'Home',
@@ -19,6 +19,7 @@ const phaseLabels: Record<ScrollPhase, string> = {
   experience: 'Experience',
   projects: 'Projects',
   contact: 'Contact',
+  message: 'Message',
 };
 
 export default function NavDots({ currentPhase }: NavDotsProps) {

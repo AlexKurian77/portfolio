@@ -144,6 +144,39 @@ export function useLaptopScroll({ groupRef, lidRef }: LaptopRefs) {
       projT.startTime + (projT.duration * 0.5)
     );
 
+    // ── Contact → Message ──
+    const contactT = getTransition(bp.contact.start, bp.message.start);
+    tl.to(
+      group.position,
+      {
+        x: kf.message.position.x,
+        y: kf.message.position.y,
+        duration: contactT.duration,
+        ease: 'power1.inOut',
+      },
+      contactT.startTime
+    );
+    tl.to(
+      group.scale,
+      {
+        x: kf.message.scale,
+        y: kf.message.scale,
+        z: kf.message.scale,
+        duration: contactT.duration,
+        ease: 'power1.inOut',
+      },
+      contactT.startTime
+    );
+    tl.to(
+      lid.rotation,
+      {
+        x: kf.message.lidRotation,
+        duration: contactT.duration * 0.6,
+        ease: 'elastic.out(1, 0.5)',
+      },
+      contactT.startTime
+    );
+
     timelineRef.current = tl;
 
     return () => {

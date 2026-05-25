@@ -18,7 +18,7 @@ export function useScrollProgress() {
         return phase as ScrollPhase;
       }
     }
-    return 'contact';
+    return 'message';
   }, []);
 
   useEffect(() => {

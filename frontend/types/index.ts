@@ -36,7 +36,7 @@ export interface Milestone {
   icon: string;
 }
 
-export type ScrollPhase = 'hero' | 'about' | 'skills' | 'experience' | 'projects' | 'contact';
+export type ScrollPhase = 'hero' | 'about' | 'skills' | 'experience' | 'projects' | 'contact' | 'message';
 
 export interface PhaseBreakpoint {
   start: number;

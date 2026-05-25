@@ -1,12 +1,13 @@
 import { ScrollBreakpoints } from '@/types';
 
 export const SCROLL_BREAKPOINTS: ScrollBreakpoints = {
-  hero:       { start: 0.00, end: 0.09 },
-  about:      { start: 0.09, end: 0.25 },
-  skills:     { start: 0.25, end: 0.42 },
-  experience: { start: 0.42, end: 0.70 },
-  projects:   { start: 0.70, end: 0.90 },
-  contact:    { start: 0.90, end: 1.00 },
+  hero:       { start: 0.00, end: 0.08 },
+  about:      { start: 0.08, end: 0.22 },
+  skills:     { start: 0.22, end: 0.37 },
+  experience: { start: 0.37, end: 0.58 },
+  projects:   { start: 0.58, end: 0.76 },
+  contact:    { start: 0.76, end: 0.88 },
+  message:    { start: 0.88, end: 1.00 },
 };
 
 // ── Color Palette ─────────────────────────────────────────────────
@@ -59,6 +60,12 @@ export const LAPTOP_KEYFRAMES = {
     scale: 0.4,
     lidRotation: -Math.PI / 2,
   },
+  // Phase 7: Message - reopen, center, full scale
+  message: {
+    position: { x: 0, y: 0, z: 0 },
+    scale: 1,
+    lidRotation: 0,
+  },
 } as const;
 
 // ── Animation Timing ──────────────────────────────────────────────
@@ -73,8 +80,8 @@ export const TIMING = {
 } as const;
 
 // ── Scroll Container ─────────────────────────────────────────────
-export const SCROLL_HEIGHT_VH = 600; // total scrollable height in vh
-export const SECTION_COUNT = 6;
+export const SCROLL_HEIGHT_VH = 700; // total scrollable height in vh
+export const SECTION_COUNT = 7;
 
 // ── Breakpoint ────────────────────────────────────────────────────
 export const MOBILE_BREAKPOINT = 768; // px

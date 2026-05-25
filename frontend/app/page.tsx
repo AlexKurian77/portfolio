@@ -121,7 +121,7 @@ export default function Home() {
         {/* Phase 1: Hero */}
         <div
           style={{
-            height: "12%",
+            height: "10%",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -133,7 +133,7 @@ export default function Home() {
         {/* Phase 2: About */}
         <div
           style={{
-            height: "18%",
+            height: "15%",
             display: "flex",
             alignItems: "center",
           }}
@@ -144,7 +144,7 @@ export default function Home() {
         {/* Phase 3: Skills */}
         <div
           style={{
-            height: "18%",
+            height: "15%",
             display: "flex",
             alignItems: "center",
           }}
@@ -155,7 +155,7 @@ export default function Home() {
         {/* Phase 4: Experience */}
         <div
           style={{
-            height: "18%",
+            height: "15%",
             display: "flex",
             alignItems: "center",
           }}
@@ -166,7 +166,7 @@ export default function Home() {
         {/* Phase 5: Projects */}
         <div
           style={{
-            height: "19%",
+            height: "17%",
             display: "flex",
             alignItems: "center",
           }}
@@ -180,13 +180,25 @@ export default function Home() {
         {/* Phase 6: Contact */}
         <div
           style={{
-            height: "15%",
+            height: "13%",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
           }}
         >
           <Contact isActive={currentPhase === "contact"} />
+        </div>
+
+        {/* Phase 7: Message */}
+        <div
+          style={{
+            height: "15%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          {/* Laptop is front and center here with the contact form on screen */}
         </div>
       </div>
     </>

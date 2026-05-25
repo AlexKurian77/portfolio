@@ -10,6 +10,70 @@ import LaptopScreen from './LaptopScreen';
 import { useLaptopScroll } from './useLaptopScroll';
 import { TIMING } from '@/lib/constants';
 
+// ── Glow Effect ────────────────────────────────────────────────
+function Glow({ lidRef }: { lidRef: React.RefObject<THREE.Group | null> }) {
+  const materialRef = useRef<THREE.ShaderMaterial>(null);
+
+  const shaderArgs = useMemo(() => ({
+    uniforms: {
+      color1: { value: new THREE.Color('#C8A97E') }, // Gold
+      color2: { value: new THREE.Color('#1A3A5C') }, // Dark Blue
+      time: { value: 0 },
+      intensity: { value: 0 },
+    },
+    vertexShader: `
+      varying vec2 vUv;
+      void main() {
+        vUv = uv;
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+      }
+    `,
+    fragmentShader: `
+      varying vec2 vUv;
+      uniform vec3 color1;
+      uniform vec3 color2;
+      uniform float time;
+      uniform float intensity;
+      void main() {
+        float dist = distance(vUv, vec2(0.5));
+        
+        // Animated pulse
+        float pulse = sin(time * 2.0) * 0.15 + 0.99;
+        float alpha = smoothstep(0.5, 0.0, dist * pulse);
+        
+        // Mix colors based on distance and time
+        vec3 finalColor = mix(color1, color2, dist * 2.0 + sin(time) * 0.2);
+        
+        gl_FragColor = vec4(finalColor, alpha * 0.4 * intensity); // Apply lid intensity
+      }
+    `,
+    transparent: true,
+    depthWrite: false,
+    blending: THREE.AdditiveBlending,
+  }), []);
+
+  useFrame(({ clock }) => {
+    if (materialRef.current) {
+      materialRef.current.uniforms.time.value = clock.getElapsedTime();
+      
+      if (lidRef.current) {
+        // rotation.x is 0 when open, -Math.PI / 2 when closed
+        const rotX = lidRef.current.rotation.x;
+        // Map from -Math.PI/2 to 0 -> 0 to 1
+        const mapped = Math.max(0, Math.min(1, 1 + rotX / (Math.PI / 2)));
+        materialRef.current.uniforms.intensity.value = mapped;
+      }
+    }
+  });
+
+  return (
+    <mesh position={[0, 1.2, -1.5]}>
+      <planeGeometry args={[6, 6]} />
+      <shaderMaterial ref={materialRef} args={[shaderArgs]} />
+    </mesh>
+  );
+}
+
 // ── Floating Particles ─────────────────────────────────────────
 function Particles({ count = 50 }: { count?: number }) {
   const meshRef = useRef<THREE.InstancedMesh>(null);
@@ -133,14 +197,17 @@ function SceneContent({
         speed={1}
         rotationIntensity={0.05}
         floatIntensity={0.1}
-        enabled={currentPhase === 'hero'}
+        enabled={currentPhase === 'hero' || currentPhase === 'message'}
       >
         <group ref={groupRef} rotation={[0.05, 0, 0]}>
-          <LaptopModel lidRef={lidRef} />
-          <LaptopScreen
-            currentPhase={currentPhase}
-            activeProject={activeProject}
-          />
+          <Glow lidRef={lidRef} />
+          <LaptopModel lidRef={lidRef}>
+            <LaptopScreen
+              currentPhase={currentPhase}
+              activeProject={activeProject}
+              lidRef={lidRef}
+            />
+          </LaptopModel>
         </group>
       </Float>
 
@@ -165,8 +232,8 @@ export default function LaptopScene({
       style={{
         position: 'fixed',
         inset: 0,
-        zIndex: 0,
-        pointerEvents: 'none',
+        zIndex: currentPhase === 'message' ? 20 : 0,
+        pointerEvents: currentPhase === 'message' ? 'auto' : 'none',
       }}
     >
       <Canvas
