@@ -27,7 +27,7 @@ export const projects: Project[] = [
   {
     id: 'helix',
     name: 'Helix',
-    tagline: 'Lab Intelligence System',
+    tagline: 'AI Scientist',
     description:
       'Designed a full-stack AI system with a RAG pipeline over 2.4M+ papers for protocol generation. Built an interactive UI for real-time refinement and predictive anomaly detection.',
     url: 'https://helix-hacknation.vercel.app/',
@@ -35,7 +35,19 @@ export const projects: Project[] = [
     image: '/images/projects/helix.png',
     color: '#1e94a6',
   },
+  {
+    id: 'resolve',
+    name: 'Resolve',
+    tagline: 'Take Control of Your Focus',
+    description:
+      'A React Native mental health app designed to help individuals overcome pornography addiction. Features an app and a Flask backend powered by Gemini AI, offering compassionate chatbot assistance and personalized recovery strategies based on PDI assessments.',
+    url: 'https://resolvefocus.vercel.app/',
+    stack: ['React Native', 'Flask', 'Firebase'],
+    image: '/images/projects/resolve.png',
+    color: '#8ac108',
+  },
 ]
+
 // ── Experience ────────────────────────────────────────────────────
 export const experiences: Experience[] = [
   {

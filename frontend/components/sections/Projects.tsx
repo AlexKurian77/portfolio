@@ -1,7 +1,7 @@
 'use client';
 
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { projects } from '@/lib/data';
 
 const containerVariants = {
@@ -30,6 +30,21 @@ interface ProjectsProps {
 }
 
 export default function Projects({ isActive, onProjectHover }: ProjectsProps) {
+  const [hoveredId, setHoveredId] = useState<string | null>(null);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      setMousePos({ x: e.clientX, y: e.clientY });
+    };
+    if (hoveredId) {
+      window.addEventListener('mousemove', handleMouseMove);
+    }
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, [hoveredId]);
+
+  const hoveredProjectData = projects.find((p) => p.id === hoveredId);
+
   return (
     <section
       id="projects"
@@ -44,6 +59,44 @@ export default function Projects({ isActive, onProjectHover }: ProjectsProps) {
         zIndex: 10,
       }}
     >
+      {/* Floating Description Tooltip */}
+      <AnimatePresence>
+        {hoveredProjectData && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            transition={{ duration: 0.15 }}
+            style={{
+              position: 'fixed',
+              top: mousePos.y + 20,
+              left: mousePos.x + 20,
+              pointerEvents: 'none',
+              zIndex: 100,
+              maxWidth: '300px',
+              padding: '16px',
+              background: 'rgba(10, 14, 23, 0.85)',
+              backdropFilter: 'blur(12px)',
+              border: '1px solid rgba(200, 169, 126, 0.2)',
+              borderRadius: '8px',
+              boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
+            }}
+          >
+            <p
+              style={{
+                fontFamily: "'Inter', sans-serif",
+                fontSize: '13px',
+                color: '#F0EDE6',
+                lineHeight: 1.5,
+                margin: 0,
+              }}
+            >
+              {hoveredProjectData.description}
+            </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Left side cards on desktop (laptop is right), full width mobile */}
       <motion.div
         initial="hidden"
@@ -107,8 +160,14 @@ export default function Projects({ isActive, onProjectHover }: ProjectsProps) {
                 display: 'block',
               }}
               data-cursor="pointer"
-              onMouseEnter={() => onProjectHover(project.id)}
-              onMouseLeave={() => onProjectHover(null)}
+              onMouseEnter={() => {
+                onProjectHover(project.id);
+                setHoveredId(project.id);
+              }}
+              onMouseLeave={() => {
+                onProjectHover(null);
+                setHoveredId(null);
+              }}
             >
               {/* Color accent bar */}
               <div
