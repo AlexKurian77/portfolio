@@ -82,12 +82,8 @@ body {
 
 /* ── Custom Cursor (desktop only) ─────────────────────────────── */
 @media (hover: hover) and (pointer: fine) {
-  html {
-    cursor: none;
-  }
-
-  a, button, [role="button"], input, textarea, select, [data-cursor="pointer"] {
-    cursor: none;
+  * {
+    cursor: none !important;
   }
 }
 

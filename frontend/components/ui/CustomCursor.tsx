@@ -1,7 +1,8 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { motion, useMotionValue } from 'framer-motion';
+import { useEffect, useState } from "react";
+import { motion, useMotionValue, AnimatePresence } from "framer-motion";
+import { MousePointerClick } from "lucide-react";
 
 export default function CustomCursor() {
   const [isHovering, setIsHovering] = useState(false);
@@ -11,7 +12,9 @@ export default function CustomCursor() {
 
   useEffect(() => {
     // Only show on devices with fine pointers
-    const hasPointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    const hasPointer = window.matchMedia(
+      "(hover: hover) and (pointer: fine)",
+    ).matches;
     if (!hasPointer) return;
 
     setIsVisible(true);
@@ -24,16 +27,16 @@ export default function CustomCursor() {
     const handleHoverStart = () => setIsHovering(true);
     const handleHoverEnd = () => setIsHovering(false);
 
-    window.addEventListener('mousemove', handleMove);
+    window.addEventListener("mousemove", handleMove);
 
     // Observe interactive elements
     const observer = new MutationObserver(() => {
       const interactives = document.querySelectorAll(
-        'a, button, [role="button"], input, textarea, select, [data-cursor="pointer"]'
+        'a, button, [role="button"], input, textarea, select, [data-cursor="pointer"]',
       );
       interactives.forEach((el) => {
-        el.addEventListener('mouseenter', handleHoverStart);
-        el.addEventListener('mouseleave', handleHoverEnd);
+        el.addEventListener("mouseenter", handleHoverStart);
+        el.addEventListener("mouseleave", handleHoverEnd);
       });
     });
 
@@ -41,15 +44,15 @@ export default function CustomCursor() {
 
     // Initial bind
     const interactives = document.querySelectorAll(
-      'a, button, [role="button"], input, textarea, select, [data-cursor="pointer"]'
+      'a, button, [role="button"], input, textarea, select, [data-cursor="pointer"]',
     );
     interactives.forEach((el) => {
-      el.addEventListener('mouseenter', handleHoverStart);
-      el.addEventListener('mouseleave', handleHoverEnd);
+      el.addEventListener("mouseenter", handleHoverStart);
+      el.addEventListener("mouseleave", handleHoverEnd);
     });
 
     return () => {
-      window.removeEventListener('mousemove', handleMove);
+      window.removeEventListener("mousemove", handleMove);
       observer.disconnect();
     };
   }, [cursorX, cursorY]);
@@ -58,36 +61,60 @@ export default function CustomCursor() {
 
   return (
     <>
-      {/* Dot */}
+      {/* Dot / Hover State */}
       <motion.div
         style={{
-          position: 'fixed',
+          position: "fixed",
           left: cursorX,
           top: cursorY,
-          width: isHovering ? 8 : 6,
-          height: isHovering ? 8 : 6,
-          borderRadius: '50%',
-          background: '#C8A97E',
-          pointerEvents: 'none',
+          width: isHovering ? 40 : 6,
+          height: isHovering ? 40 : 6,
+          borderRadius: "50%",
+          background: isHovering ? "transparent" : "#C8A97E",
+          border: isHovering ? "1px solid rgba(200, 169, 126, 0.8)" : "none",
+          pointerEvents: "none",
           zIndex: 9999,
-          transform: 'translate(-50%, -50%)',
-          transition: 'width 0.2s, height 0.2s',
+          transform: "translate(-50%, -50%)",
+          transition:
+            "width 0.3s cubic-bezier(0.16,1,0.3,1), height 0.3s cubic-bezier(0.16,1,0.3,1), background 0.3s",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
         }}
-      />
-      {/* Ring */}
+      >
+        <AnimatePresence>
+          {isHovering && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0 }}
+              transition={{ duration: 0.2 }}
+            >
+              <MousePointerClick
+                size={18}
+                color="#ffe5c1ff"
+                strokeWidth={2.5}
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.div>
+      {/* Outer Ring */}
       <motion.div
         style={{
-          position: 'fixed',
+          position: "fixed",
           left: cursorX,
           top: cursorY,
-          width: isHovering ? 48 : 32,
-          height: isHovering ? 48 : 32,
-          borderRadius: '50%',
-          border: `1px solid rgba(200, 169, 126, ${isHovering ? 0.5 : 0.25})`,
-          pointerEvents: 'none',
+          width: isHovering ? 0 : 32,
+          height: isHovering ? 0 : 32,
+          opacity: isHovering ? 0 : 1,
+          borderRadius: "50%",
+          border: "1px solid rgba(200, 169, 126, 0.25)",
+          pointerEvents: "none",
           zIndex: 9998,
-          transform: 'translate(-50%, -50%)',
-          transition: 'width 0.3s cubic-bezier(0.16,1,0.3,1), height 0.3s cubic-bezier(0.16,1,0.3,1), border-color 0.3s',
+          transform: "translate(-50%, -50%)",
+          transition:
+            "width 0.3s cubic-bezier(0.16,1,0.3,1), height 0.3s cubic-bezier(0.16,1,0.3,1), opacity 0.3s",
         }}
       />
     </>
