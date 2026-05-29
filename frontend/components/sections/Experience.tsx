@@ -1,8 +1,8 @@
 'use client';
 
-import React from 'react';
 import { motion } from 'framer-motion';
 import { experiences } from '@/lib/data';
+import Link from 'next/link';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -23,9 +23,10 @@ const cardVariants = {
 
 interface ExperienceProps {
   isActive: boolean;
+  onHover?: (id: string | null) => void;
 }
 
-export default function Experience({ isActive }: ExperienceProps) {
+export default function Experience({ isActive, onHover }: ExperienceProps) {
   return (
     <section
       id="experience"
@@ -90,7 +91,9 @@ export default function Experience({ isActive }: ExperienceProps) {
               key={exp.id}
               variants={cardVariants}
               className="glass-card"
-              style={{ padding: '24px' }}
+              style={{ padding: '24px', pointerEvents: 'auto' }}
+              onMouseEnter={() => onHover?.(exp.id)}
+              onMouseLeave={() => onHover?.(null)}
             >
               <div
                 style={{
@@ -173,6 +176,12 @@ export default function Experience({ isActive }: ExperienceProps) {
                   </li>
                 ))}
               </ul>
+              
+              <div style={{ marginTop: '16px', display: 'flex', justifyContent: 'flex-start' }}>
+                <Link href={`/experience/${exp.id}`} className="tag-pill hover:scale-105 transition-transform" style={{ pointerEvents: 'auto', padding: '6px 12px', fontSize: '12px' }}>
+                  Read Full Details →
+                </Link>
+              </div>
             </motion.div>
           ))}
         </div>

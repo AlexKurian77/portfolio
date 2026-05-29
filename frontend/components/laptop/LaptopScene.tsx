@@ -123,16 +123,18 @@ function Particles({ count = 50 }: { count?: number }) {
 function SceneContent({
   currentPhase,
   activeProject,
+  disableScroll,
 }: {
   currentPhase: string;
   activeProject?: string | null;
+  disableScroll?: boolean;
 }) {
   const groupRef = useRef<THREE.Group>(null);
   const lidRef = useRef<THREE.Group>(null);
   const screenHtmlRef = useRef<HTMLDivElement>(null);
 
   // Set up scroll-driven animations
-  useLaptopScroll({ groupRef, lidRef, screenHtmlRef });
+  useLaptopScroll({ groupRef, lidRef, screenHtmlRef, disableScroll });
 
   // Spring-open the lid on mount
   useEffect(() => {
@@ -251,11 +253,13 @@ function SceneContent({
 interface LaptopSceneProps {
   currentPhase: string;
   activeProject?: string | null;
+  disableScroll?: boolean;
 }
 
 export default function LaptopScene({
   currentPhase,
   activeProject,
+  disableScroll,
 }: LaptopSceneProps) {
   return (
     <div
@@ -278,6 +282,7 @@ export default function LaptopScene({
         <SceneContent
           currentPhase={currentPhase}
           activeProject={activeProject}
+          disableScroll={disableScroll}
         />
       </Canvas>
     </div>

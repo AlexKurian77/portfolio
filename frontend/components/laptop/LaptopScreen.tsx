@@ -784,6 +784,40 @@ function ExperienceScreenContent() {
   );
 }
 
+// ── Detailed Experience Screen (Iframe) ────────────────────────
+function DetailedExperienceScreenContent({ expId }: { expId: string }) {
+  const scale = 320 / 680;
+
+  return (
+    <div style={{ 
+      width: '100%', 
+      height: '100%', 
+      background: '#0a0a0a', 
+      overflow: 'hidden',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center'
+    }}>
+      <div style={{
+        width: '680px',
+        height: '360px',
+        transform: `scale(${scale})`,
+        transformOrigin: 'center',
+        flexShrink: 0
+      }}>
+        <iframe 
+          src={`/${expId}.html`} 
+          width="100%" 
+          height="100%" 
+          style={{ border: "none" }}
+          title={`${expId} scene`}
+          scrolling="no"
+        />
+      </div>
+    </div>
+  );
+}
+
 // ── Project Idle Screen (Mini IDE) ─────────────────────────────
 function ProjectIdleScreen() {
   const codeSnippets = useMemo(
@@ -1478,6 +1512,9 @@ export default function LaptopScreen({
       case "skills":
         return <SkillsScreenContent />;
       case "experience":
+        if (activeProject) {
+          return <DetailedExperienceScreenContent expId={activeProject} />;
+        }
         return <ExperienceScreenContent />;
       case "projects":
         return <ProjectScreenContent projectId={activeProject} />;

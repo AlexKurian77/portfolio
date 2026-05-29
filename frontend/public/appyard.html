@@ -1,0 +1,430 @@
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+.stage { width: 100%; height: 360px; background: #0a0a0a; overflow: hidden; }
+</style>
+<div class="stage">
+<canvas id="c" width="680" height="360" style="width:100%;height:100%;display:block;"></canvas>
+</div>
+<script>
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+const W=680, H=360;
+let t=0;
+
+if (!CanvasRenderingContext2D.prototype.roundRect) {
+  CanvasRenderingContext2D.prototype.roundRect = function(x,y,w,h,r){
+    const rr=typeof r==='number'?[r,r,r,r]:r;
+    this.beginPath();
+    this.moveTo(x+rr[0],y);this.lineTo(x+w-rr[1],y);
+    this.quadraticCurveTo(x+w,y,x+w,y+rr[1]);this.lineTo(x+w,y+h-rr[2]);
+    this.quadraticCurveTo(x+w,y+h,x+w-rr[2],y+h);this.lineTo(x+rr[3],y+h);
+    this.quadraticCurveTo(x,y+h,x,y+h-rr[3]);this.lineTo(x,y+rr[0]);
+    this.quadraticCurveTo(x,y,x+rr[0],y);this.closePath();
+  };
+}
+
+const GOLD='#C8A97E', GOLD_D='#8B6B3D';
+
+function drawWindow(ctx, t) {
+  ctx.save();
+  ctx.translate(80, 30);
+  // window frame
+  ctx.fillStyle='#1a1a2a';
+  ctx.beginPath(); ctx.roundRect(0,0,160,130,4); ctx.fill();
+  ctx.strokeStyle='#2a2a3a'; ctx.lineWidth=2; ctx.stroke();
+
+  // night sky
+  ctx.fillStyle='#060810';
+  ctx.fillRect(4,4,152,122);
+
+  // stars
+  for(let i=0;i<40;i++){
+    const sx=(i*97+13)%148+4, sy=(i*53+7)%80+4;
+    const twinkle = 0.3+0.5*Math.abs(Math.sin(t*0.04+i*0.7));
+    ctx.fillStyle=`rgba(255,255,255,${twinkle})`;
+    ctx.beginPath(); ctx.arc(sx,sy,i%3===0?1.2:0.7,0,Math.PI*2); ctx.fill();
+  }
+
+  // moon
+  ctx.fillStyle='rgba(240,230,200,0.9)';
+  ctx.beginPath(); ctx.arc(130,28,16,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle='#060810';
+  ctx.beginPath(); ctx.arc(137,24,13,0,Math.PI*2); ctx.fill();
+
+  // city skyline silhouette
+  ctx.fillStyle='#0a0c14';
+  const buildings = [
+    [0,90,18,40],[18,100,14,30],[32,85,20,45],[52,95,16,35],
+    [68,80,22,50],[90,92,15,38],[105,88,18,42],[123,96,14,34],
+    [137,82,15,48]
+  ];
+  buildings.forEach(([bx,by,bw,bh])=>{
+    ctx.fillRect(bx,by,bw,bh);
+    // windows
+    for(let wy=by+4;wy<by+bh-4;wy+=8){
+      for(let wx=bx+3;wx<bx+bw-3;wx+=6){
+        if(Math.sin(wx*7+wy*3)>0.1){
+          ctx.fillStyle=`rgba(255,220,100,${0.3+0.2*Math.sin(t*0.03+wx)})`;
+          ctx.fillRect(wx,wy,3,4);
+          ctx.fillStyle='#0a0c14';
+        }
+      }
+    }
+  });
+
+  // window pane dividers
+  ctx.strokeStyle='#2a2a3a'; ctx.lineWidth=2;
+  ctx.beginPath(); ctx.moveTo(80,4); ctx.lineTo(80,126); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(4,67); ctx.lineTo(156,67); ctx.stroke();
+
+  // condensation drops
+  [20,55,95,130].forEach((dx,i)=>{
+    const dy = 70 + ((t*0.3+i*18)%50);
+    ctx.fillStyle='rgba(150,180,220,0.15)';
+    ctx.beginPath(); ctx.arc(dx,dy,1.5,0,Math.PI*2); ctx.fill();
+  });
+
+  ctx.restore();
+}
+
+function drawDesk(ctx) {
+  // wall
+  ctx.fillStyle='#0f0f18'; ctx.fillRect(0,0,W,240);
+  ctx.fillStyle='#0a0a12'; ctx.fillRect(0,240,W,120);
+
+  // desk surface
+  ctx.fillStyle='#1a1520';
+  ctx.beginPath(); ctx.roundRect(60,230,560,18,3); ctx.fill();
+  ctx.fillStyle='#141018';
+  ctx.beginPath(); ctx.roundRect(60,248,560,8,2); ctx.fill();
+  // desk legs
+  ctx.fillStyle='#111018';
+  ctx.beginPath(); ctx.roundRect(80,256,14,80,2); ctx.fill();
+  ctx.beginPath(); ctx.roundRect(586,256,14,80,2); ctx.fill();
+
+  // shelf above desk
+  ctx.fillStyle='#161220';
+  ctx.beginPath(); ctx.roundRect(380,90,200,12,2); ctx.fill();
+  // shelf items — books
+  [[390,'#C8A97E'],[402,'#4a6aaa'],[413,'#6a4aaa'],[424,'#4a8a5a'],[435,'#aa5a4a']].forEach(([bx,bc])=>{
+    ctx.fillStyle=bc;
+    ctx.beginPath(); ctx.roundRect(bx,68,9,24,1); ctx.fill();
+  });
+  // small plant on shelf
+  ctx.fillStyle='#2a1a0a';
+  ctx.beginPath(); ctx.roundRect(540,82,10,12,2); ctx.fill();
+  ctx.fillStyle='#3a6a2a';
+  ctx.beginPath(); ctx.ellipse(545,78,10,12,0,0,Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(538,82,7,9,-0.4,0,Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(552,80,7,9,0.4,0,Math.PI*2); ctx.fill();
+  // small figure/toy
+  ctx.fillStyle='#C8A97E';
+  ctx.beginPath(); ctx.arc(575,84,5,0,Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.roundRect(571,89,8,10,2); ctx.fill();
+}
+
+function drawMonitor(ctx, t) {
+  ctx.save();
+  ctx.translate(370, 100);
+
+  // monitor stand
+  ctx.fillStyle='#1a1a28';
+  ctx.beginPath(); ctx.roundRect(-6,128,12,16,2); ctx.fill();
+  ctx.beginPath(); ctx.roundRect(-20,142,40,6,3); ctx.fill();
+
+  // monitor body
+  ctx.fillStyle='#111120';
+  ctx.beginPath(); ctx.roundRect(-90,-10,180,140,6); ctx.fill();
+  ctx.strokeStyle='#252535'; ctx.lineWidth=1; ctx.stroke();
+
+  // screen
+  ctx.fillStyle='#060812';
+  ctx.beginPath(); ctx.roundRect(-82,-2,164,120,4); ctx.fill();
+
+  // VS Code layout
+  // sidebar
+  ctx.fillStyle='#0e1020';
+  ctx.fillRect(-82,-2,26,120);
+  // sidebar icons
+  ['#4a6aaa','#5a5a7a','#3a5a3a','#7a4a5a'].forEach((c,i)=>{
+    ctx.fillStyle=c; ctx.globalAlpha=0.6;
+    ctx.beginPath(); ctx.roundRect(-76,8+i*22,14,14,3); ctx.fill();
+    ctx.globalAlpha=1;
+  });
+
+  // file tree
+  ctx.fillStyle='#141628'; ctx.fillRect(-56,-2,40,120);
+  ['index.js','App.tsx','styles.css','api.ts','utils.js'].forEach((f,i)=>{
+    ctx.fillStyle=i===1?'#C8A97E':'#4a4a6a';
+    ctx.font=`${i===1?'500':'400'} 6px monospace`;
+    ctx.textAlign='left'; ctx.fillText(f,-52,10+i*14);
+  });
+
+  // code area
+  const codeColors=['#7a9aff','#5aaa7a','#C8A97E','#aa7aff','#5a9aff','#7acc7a','#C8A97E','#ff7a7a','#5aaa7a'];
+  codeColors.forEach((c,i)=>{
+    const w=30+Math.sin(i*2.3)*20;
+    ctx.fillStyle=c; ctx.globalAlpha=0.7;
+    ctx.fillRect(-12, 4+i*12, w, 3);
+    ctx.fillStyle='#3a4a5a'; ctx.globalAlpha=0.5;
+    ctx.fillRect(-12+w+4, 4+i*12, 15+Math.sin(i)*10, 3);
+    ctx.globalAlpha=1;
+  });
+
+  // cursor blink
+  if(Math.floor(t/20)%2===0){
+    ctx.fillStyle='#C8A97E'; ctx.globalAlpha=0.9;
+    ctx.fillRect(-12, 4+6*12, 2, 8);
+    ctx.globalAlpha=1;
+  }
+
+  // terminal at bottom
+  ctx.fillStyle='#080a10'; ctx.fillRect(-82,88,164,30);
+  ctx.fillStyle='#2a2a3a'; ctx.fillRect(-82,88,164,2);
+  ctx.fillStyle='#3a6a3a'; ctx.globalAlpha=0.8;
+  ctx.font='6px monospace'; ctx.textAlign='left';
+  ctx.fillText('> npm run dev', -76, 100);
+  ctx.fillStyle='#5aaa5a';
+  ctx.fillText('✓ compiled successfully', -76, 112);
+  ctx.globalAlpha=1;
+
+  ctx.restore();
+}
+
+function drawLaptop(ctx, t) {
+  ctx.save();
+  ctx.translate(230, 218);
+  ctx.rotate(-0.05);
+
+  const gp = 0.8+0.2*Math.sin(t*0.07);
+
+  // screen glow
+  ctx.fillStyle=`rgba(80,120,220,${0.1*gp})`;
+  ctx.beginPath(); ctx.ellipse(0,20,55,15,0,0,Math.PI*2); ctx.fill();
+
+  // lid
+  ctx.fillStyle='#111';
+  ctx.beginPath(); ctx.roundRect(-52,-58,104,52,4); ctx.fill();
+  ctx.strokeStyle='#222'; ctx.lineWidth=0.5; ctx.stroke();
+
+  // screen
+  ctx.fillStyle='#060810';
+  ctx.beginPath(); ctx.roundRect(-47,-55,94,44,2); ctx.fill();
+
+  // browser/figma on laptop
+  ctx.fillStyle='#0d1520'; ctx.fillRect(-45,-53,90,10);
+  ctx.fillStyle='#1a2030'; ctx.fillRect(-45,-43,90,32);
+  // tabs
+  ['#C8A97E','#4a5a7a'].forEach((c,i)=>{
+    ctx.fillStyle=c; ctx.globalAlpha=i===0?0.9:0.4;
+    ctx.beginPath(); ctx.roundRect(-43+i*32,-52,28,8,[3,3,0,0]); ctx.fill();
+    ctx.globalAlpha=1;
+  });
+  // content
+  [0,8,16,24].forEach(dy=>{
+    ctx.fillStyle='#3a4a6a'; ctx.globalAlpha=0.6;
+    ctx.fillRect(-42,-38+dy,60+Math.sin(dy)*15,4);
+    ctx.globalAlpha=1;
+  });
+
+  // base
+  ctx.fillStyle='#1a1a1a';
+  ctx.beginPath(); ctx.roundRect(-54,-6,108,10,3); ctx.fill();
+  ctx.beginPath(); ctx.roundRect(-54,4,108,5,[0,0,3,3]); ctx.fill();
+
+  // trackpad
+  ctx.fillStyle='#222';
+  ctx.beginPath(); ctx.roundRect(-18,-4,36,7,2); ctx.fill();
+
+  ctx.restore();
+}
+
+function drawCoffee(ctx, t) {
+  ctx.save();
+  ctx.translate(510, 222);
+
+  // saucer
+  ctx.fillStyle='#2a1a0a';
+  ctx.beginPath(); ctx.ellipse(0,8,20,5,0,0,Math.PI*2); ctx.fill();
+
+  // mug
+  ctx.fillStyle='#1a1a2a';
+  ctx.beginPath(); ctx.roundRect(-12,-8,24,18,3); ctx.fill();
+  ctx.strokeStyle='#2a2a3a'; ctx.lineWidth=0.5; ctx.stroke();
+
+  // handle
+  ctx.strokeStyle='#1a1a2a'; ctx.lineWidth=3;
+  ctx.beginPath(); ctx.arc(16,-1,8,Math.PI*0.3,Math.PI*1.7); ctx.stroke();
+
+  // coffee surface
+  ctx.fillStyle='#3a1a0a';
+  ctx.beginPath(); ctx.ellipse(0,-8,10,3,0,0,Math.PI*2); ctx.fill();
+
+  // steam
+  [[-4,-10],[0,-10],[4,-10]].forEach(([sx,sy],i)=>{
+    const yo = (t*0.05+i*0.7)%1;
+    ctx.strokeStyle=`rgba(200,180,160,${0.3*(1-yo)})`;
+    ctx.lineWidth=1.2; ctx.lineCap='round';
+    ctx.beginPath();
+    ctx.moveTo(sx, sy-yo*18);
+    ctx.bezierCurveTo(sx+3,sy-yo*18-4,sx-3,sy-yo*18-8,sx,sy-yo*18-12);
+    ctx.stroke();
+  });
+
+  // mug logo
+  ctx.fillStyle='rgba(200,169,126,0.4)';
+  ctx.font='bold 7px sans-serif'; ctx.textAlign='center';
+  ctx.fillText('☕',-1,0);
+
+  ctx.restore();
+}
+
+function drawHeadphones(ctx) {
+  ctx.save();
+  ctx.translate(560, 228);
+  ctx.rotate(0.3);
+  ctx.strokeStyle='#2a2a3a'; ctx.lineWidth=4; ctx.lineCap='round';
+  ctx.beginPath(); ctx.arc(0,0,20,Math.PI,Math.PI*2); ctx.stroke();
+  ctx.fillStyle='#1a1a28';
+  ctx.beginPath(); ctx.roundRect(-24,-4,10,14,4); ctx.fill();
+  ctx.beginPath(); ctx.roundRect(14,-4,10,14,4); ctx.fill();
+  ctx.fillStyle='#C8A97E'; ctx.globalAlpha=0.3;
+  ctx.beginPath(); ctx.roundRect(-22,-2,6,10,3); ctx.fill();
+  ctx.beginPath(); ctx.roundRect(16,-2,6,10,3); ctx.fill();
+  ctx.globalAlpha=1;
+  ctx.restore();
+}
+
+function drawPhone(ctx, t) {
+  ctx.save();
+  ctx.translate(460, 226);
+  ctx.rotate(0.1);
+  ctx.fillStyle='#111120';
+  ctx.beginPath(); ctx.roundRect(-10,-18,20,30,4); ctx.fill();
+  ctx.strokeStyle='#1a1a2a'; ctx.lineWidth=0.5; ctx.stroke();
+  ctx.fillStyle='#0a0a18';
+  ctx.beginPath(); ctx.roundRect(-8,-16,16,24,3); ctx.fill();
+  // notification
+  if(Math.floor(t/40)%2===0){
+    ctx.fillStyle='rgba(100,200,100,0.8)';
+    ctx.beginPath(); ctx.arc(8,-16,4,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle='white'; ctx.font='bold 5px sans-serif'; ctx.textAlign='center';
+    ctx.fillText('1',8,-14);
+  }
+  ctx.restore();
+}
+
+function drawLego(ctx, t) {
+  const bob = Math.sin(t*0.06)*1.5;
+  ctx.save();
+  ctx.translate(340, 220+bob);
+
+  // cross-legged sit
+  ctx.fillStyle='#1a1a2e';
+  ctx.beginPath(); ctx.roundRect(-20,4,18,12,3); ctx.fill();
+  ctx.beginPath(); ctx.roundRect(2,4,18,12,3); ctx.fill();
+  ctx.beginPath(); ctx.roundRect(-4,12,14,10,3); ctx.fill();
+  ctx.beginPath(); ctx.roundRect(-10,12,14,10,3); ctx.fill();
+
+  // body — gold shirt
+  ctx.fillStyle='#C8A97E';
+  ctx.beginPath(); ctx.roundRect(-12,-18,24,24,3); ctx.fill();
+  ctx.fillStyle='#8B6B3D';
+  ctx.beginPath(); ctx.roundRect(-9,-15,18,3,1); ctx.fill();
+
+  // arms reaching toward laptop
+  ctx.save();
+  ctx.translate(-15,-14);
+  ctx.rotate(-0.5);
+  ctx.fillStyle='#C8A97E';
+  ctx.beginPath(); ctx.roundRect(0,0,7,16,3); ctx.fill();
+  ctx.fillStyle='#F0C090';
+  ctx.beginPath(); ctx.roundRect(-1,14,8,6,2); ctx.fill();
+  ctx.restore();
+
+  ctx.save();
+  ctx.translate(8,-14);
+  ctx.rotate(0.4);
+  ctx.fillStyle='#C8A97E';
+  ctx.beginPath(); ctx.roundRect(0,0,7,16,3); ctx.fill();
+  ctx.fillStyle='#F0C090';
+  ctx.beginPath(); ctx.roundRect(-1,14,8,6,2); ctx.fill();
+  ctx.restore();
+
+  // head
+  ctx.fillStyle='#F0C090';
+  ctx.beginPath(); ctx.roundRect(-10,-38,20,22,4); ctx.fill();
+
+  // hair
+  ctx.fillStyle='#2C1A0E';
+  ctx.beginPath(); ctx.roundRect(-10,-38,20,9,[5,5,0,0]); ctx.fill();
+
+  // eyes looking at screen
+  ctx.fillStyle='#1a1a1a';
+  ctx.fillRect(-5,-30,4,3); ctx.fillRect(2,-30,4,3);
+
+  // screen glow on face
+  const glow = 0.8+0.2*Math.sin(t*0.07);
+  ctx.fillStyle=`rgba(80,120,220,${0.2*glow})`;
+  ctx.beginPath(); ctx.ellipse(0,-24,12,8,0,0,Math.PI*2); ctx.fill();
+
+  // headphones on head
+  ctx.strokeStyle='#222'; ctx.lineWidth=3;
+  ctx.beginPath(); ctx.arc(0,-34,12,Math.PI,Math.PI*2); ctx.stroke();
+  ctx.fillStyle='#1a1a28';
+  ctx.beginPath(); ctx.roundRect(-14,-38,7,10,3); ctx.fill();
+  ctx.beginPath(); ctx.roundRect(7,-38,7,10,3); ctx.fill();
+
+  // stud
+  ctx.fillStyle='#2C1A0E';
+  ctx.beginPath(); ctx.roundRect(-3,-42,6,5,2); ctx.fill();
+
+  ctx.restore();
+}
+
+function loop() {
+  ctx.fillStyle='#080810'; ctx.fillRect(0,0,W,H);
+
+  // walls
+  ctx.fillStyle='#0c0c18'; ctx.fillRect(0,0,W,240);
+  ctx.fillStyle='#080810'; ctx.fillRect(0,240,W,120);
+
+  drawWindow(ctx, t);
+  drawDesk(ctx);
+  drawMonitor(ctx, t);
+  drawLaptop(ctx, t);
+  drawCoffee(ctx, t);
+  drawHeadphones(ctx);
+  drawPhone(ctx, t);
+  drawLego(ctx, t);
+
+  // monitor glow on wall
+  const mg = 0.8+0.2*Math.sin(t*0.05);
+  ctx.fillStyle=`rgba(60,90,180,${0.06*mg})`;
+  ctx.beginPath(); ctx.ellipse(370,160,160,80,0,0,Math.PI*2); ctx.fill();
+
+  // laptop glow
+  ctx.fillStyle=`rgba(60,90,180,${0.08*mg})`;
+  ctx.beginPath(); ctx.ellipse(230,220,80,30,0,0,Math.PI*2); ctx.fill();
+
+  // vignette
+  const vig = ctx.createRadialGradient(W/2,H/2,80,W/2,H/2,380);
+  vig.addColorStop(0,'rgba(0,0,0,0)');
+  vig.addColorStop(1,'rgba(0,0,0,0.75)');
+  ctx.fillStyle=vig; ctx.fillRect(0,0,W,H);
+
+  // label
+  ctx.fillStyle='rgba(200,169,126,0.9)';
+  ctx.font='500 13px system-ui, sans-serif';
+  ctx.textAlign='center';
+  ctx.fillText('Appyard Technologies  ·  Remote  ·  2025', 340, 326);
+  ctx.fillStyle='rgba(80,70,100,0.9)';
+  ctx.font='11px system-ui, sans-serif';
+  ctx.fillText('Solo grind · headphones in', 340, 344);
+
+  t++;
+  requestAnimationFrame(loop);
+}
+loop();
+</script>

@@ -1,0 +1,408 @@
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+.stage { width: 100%; height: 360px; background: #0a0a0a; overflow: hidden; }
+</style>
+<div class="stage">
+<canvas id="c" width="680" height="360" style="width:100%;height:100%;display:block;"></canvas>
+</div>
+<script>
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+const W=680, H=360;
+let t=0;
+
+if (!CanvasRenderingContext2D.prototype.roundRect) {
+  CanvasRenderingContext2D.prototype.roundRect = function(x,y,w,h,r){
+    const rr=typeof r==='number'?[r,r,r,r]:r;
+    this.beginPath();
+    this.moveTo(x+rr[0],y);this.lineTo(x+w-rr[1],y);
+    this.quadraticCurveTo(x+w,y,x+w,y+rr[1]);this.lineTo(x+w,y+h-rr[2]);
+    this.quadraticCurveTo(x+w,y+h,x+w-rr[2],y+h);this.lineTo(x+rr[3],y+h);
+    this.quadraticCurveTo(x,y+h,x,y+h-rr[3]);this.lineTo(x,y+rr[0]);
+    this.quadraticCurveTo(x,y,x+rr[0],y);this.closePath();
+  };
+}
+
+const GOLD='#C8A97E', GOLD_D='#8B6B3D', GOLD_B='#E8C99E';
+
+function drawBackground() {
+  // warm interior walls
+  const wallGrad = ctx.createLinearGradient(0,0,0,H);
+  wallGrad.addColorStop(0,'#2a1e10');
+  wallGrad.addColorStop(0.6,'#1e1408');
+  wallGrad.addColorStop(1,'#140e06');
+  ctx.fillStyle=wallGrad; ctx.fillRect(0,0,W,H);
+
+  // wooden floor
+  ctx.fillStyle='#1a1008';
+  ctx.fillRect(0,290,W,70);
+  for(let i=0;i<W;i+=90){
+    ctx.fillStyle='rgba(255,200,100,0.03)';
+    ctx.fillRect(i,290,44,70);
+  }
+  for(let y=300;y<360;y+=20){
+    ctx.strokeStyle='rgba(0,0,0,0.2)'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke();
+  }
+  [120,240,360,480,600].forEach(x=>{
+    ctx.strokeStyle='rgba(0,0,0,0.15)'; ctx.lineWidth=0.5;
+    ctx.beginPath(); ctx.moveTo(x,290); ctx.lineTo(x,360); ctx.stroke();
+  });
+
+  // ceiling
+  ctx.fillStyle='#1a1208';
+  ctx.fillRect(0,0,W,30);
+  // ceiling light fixture
+  ctx.fillStyle='#2a2010';
+  ctx.beginPath(); ctx.roundRect(280,0,120,18,3); ctx.fill();
+  ctx.fillStyle='rgba(255,220,150,0.6)';
+  ctx.beginPath(); ctx.roundRect(290,14,100,6,3); ctx.fill();
+  // warm glow from light
+  const lightPulse = 0.9+0.1*Math.sin(t*0.03);
+  ctx.fillStyle=`rgba(255,200,100,${0.12*lightPulse})`;
+  ctx.beginPath(); ctx.ellipse(340,60,200,80,0,0,Math.PI*2); ctx.fill();
+}
+
+function drawBookshelf(ctx, x, y, w, h) {
+  // shelf frame
+  ctx.fillStyle='#3a2010';
+  ctx.beginPath(); ctx.roundRect(x,y,w,h,3); ctx.fill();
+  ctx.fillStyle='#2a1808';
+  ctx.beginPath(); ctx.roundRect(x+4,y+4,w-8,h-8,2); ctx.fill();
+
+  // shelf planks
+  const rows = 3;
+  const rowH = (h-8)/rows;
+  for(let r=0;r<rows;r++){
+    ctx.fillStyle='#3a2010';
+    ctx.fillRect(x+4, y+4+(r+1)*rowH-4, w-8, 6);
+
+    // books on each shelf
+    let bx = x+8;
+    const by = y+4+r*rowH+6;
+    const bh = rowH-16;
+    const bookColors=['#C8A97E','#4a6aaa','#6a4aaa','#4a8a5a','#aa5a4a','#aa9a4a','#5a8aaa','#8a4a6a','#4aaa7a','#aa7a4a'];
+    let bi=r*4;
+    while(bx < x+w-12){
+      const bw = 8+Math.floor(Math.sin(bi*3.7)*3);
+      ctx.fillStyle=bookColors[bi%bookColors.length];
+      ctx.beginPath(); ctx.roundRect(bx,by,bw,bh,1); ctx.fill();
+      ctx.strokeStyle='rgba(0,0,0,0.3)'; ctx.lineWidth=0.5; ctx.stroke();
+      // spine line
+      ctx.strokeStyle='rgba(255,255,255,0.1)'; ctx.lineWidth=0.5;
+      ctx.beginPath(); ctx.moveTo(bx+2,by+4); ctx.lineTo(bx+2,by+bh-4); ctx.stroke();
+      bx+=bw+1; bi++;
+    }
+  }
+}
+
+function drawCounter(ctx, t) {
+  // counter
+  ctx.fillStyle='#3a2810';
+  ctx.beginPath(); ctx.roundRect(220,238,240,55,4); ctx.fill();
+  ctx.fillStyle='#4a3818';
+  ctx.beginPath(); ctx.roundRect(220,238,240,12,4); ctx.fill();
+  ctx.strokeStyle='#5a4820'; ctx.lineWidth=1; ctx.strokeRect(220,238,240,55);
+
+  // POS tablet on counter
+  ctx.save();
+  ctx.translate(310,235);
+  // stand
+  ctx.fillStyle='#1a1a1a';
+  ctx.beginPath(); ctx.roundRect(-4,0,8,16,2); ctx.fill();
+  ctx.beginPath(); ctx.roundRect(-10,14,20,5,2); ctx.fill();
+  // tablet
+  ctx.fillStyle='#111';
+  ctx.beginPath(); ctx.roundRect(-22,-36,44,40,4); ctx.fill();
+  ctx.strokeStyle='#222'; ctx.lineWidth=0.5; ctx.stroke();
+  // screen
+  ctx.fillStyle='#060e18';
+  ctx.beginPath(); ctx.roundRect(-19,-34,38,34,3); ctx.fill();
+  // POS UI
+  ctx.fillStyle='#1a2a1a'; ctx.fillRect(-19,-34,38,12);
+  ctx.fillStyle='rgba(100,200,100,0.8)';
+  ctx.font='5px monospace'; ctx.textAlign='center';
+  ctx.fillText('AMEYA POS',0,-25);
+  // items
+  ['Book · ₹299','Novel · ₹450'].forEach((item,i)=>{
+    ctx.fillStyle='rgba(200,169,126,0.7)';
+    ctx.font='4px monospace'; ctx.textAlign='left';
+    ctx.fillText(item,-17,-16+i*8);
+  });
+  // total
+  ctx.fillStyle='rgba(100,220,100,0.9)';
+  ctx.fillRect(-19,-4,38,6);
+  ctx.fillStyle='#0a1a0a';
+  ctx.font='bold 5px monospace'; ctx.textAlign='center';
+  ctx.fillText('TOTAL ₹749',0,0);
+  // cursor blink on screen
+  if(Math.floor(t/25)%2===0){
+    ctx.fillStyle='rgba(200,169,126,0.8)';
+    ctx.fillRect(10,-16,1.5,4);
+  }
+  ctx.restore();
+
+  // cash register / card reader
+  ctx.fillStyle='#1a1a1a';
+  ctx.beginPath(); ctx.roundRect(376,242,40,28,3); ctx.fill();
+  ctx.fillStyle='#111';
+  ctx.beginPath(); ctx.roundRect(379,245,34,14,2); ctx.fill();
+  ctx.fillStyle='rgba(0,200,100,0.5)';
+  ctx.beginPath(); ctx.roundRect(381,247,30,4,1); ctx.fill();
+  // card slot
+  ctx.strokeStyle='#333'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(379,262); ctx.lineTo(413,262); ctx.stroke();
+
+  // small items on counter
+  ctx.fillStyle='#C8A97E'; ctx.globalAlpha=0.7;
+  ctx.beginPath(); ctx.roundRect(430,246,18,12,2); ctx.fill();
+  ctx.globalAlpha=1;
+  ctx.fillStyle='#8B6B3D';
+  ctx.font='5px sans-serif'; ctx.textAlign='center';
+  ctx.fillText('📎',439,255);
+}
+
+function drawCustomer(ctx, t) {
+  // customer on other side of counter
+  const bob = Math.sin(t*0.05)*1;
+  ctx.save();
+  ctx.translate(430, 242+bob);
+
+  // legs
+  ctx.fillStyle='#1a2a3a';
+  ctx.beginPath(); ctx.roundRect(-7,0,8,20,2); ctx.fill();
+  ctx.beginPath(); ctx.roundRect(2,0,8,20,2); ctx.fill();
+  ctx.fillStyle='#111';
+  ctx.beginPath(); ctx.roundRect(-8,18,10,6,2); ctx.fill();
+  ctx.beginPath(); ctx.roundRect(1,18,10,6,2); ctx.fill();
+
+  // body
+  ctx.fillStyle='#2a3a5a';
+  ctx.beginPath(); ctx.roundRect(-11,-20,22,22,3); ctx.fill();
+
+  // arms — one extended with phone/card
+  ctx.save();
+  ctx.translate(-14,-16); ctx.rotate(-0.3);
+  ctx.fillStyle='#2a3a5a';
+  ctx.beginPath(); ctx.roundRect(0,0,7,16,3); ctx.fill();
+  ctx.fillStyle='#F0C090';
+  ctx.beginPath(); ctx.roundRect(-1,14,8,6,2); ctx.fill();
+  // phone in hand
+  ctx.fillStyle='#111';
+  ctx.beginPath(); ctx.roundRect(-3,18,10,14,2); ctx.fill();
+  ctx.fillStyle='rgba(100,180,255,0.5)';
+  ctx.beginPath(); ctx.roundRect(-1,20,6,10,1); ctx.fill();
+  ctx.restore();
+
+  ctx.save();
+  ctx.translate(8,-16); ctx.rotate(0.2);
+  ctx.fillStyle='#2a3a5a';
+  ctx.beginPath(); ctx.roundRect(0,0,7,16,3); ctx.fill();
+  ctx.fillStyle='#F0C090';
+  ctx.beginPath(); ctx.roundRect(-1,14,8,6,2); ctx.fill();
+  ctx.restore();
+
+  // head
+  ctx.fillStyle='#F0C090';
+  ctx.beginPath(); ctx.roundRect(-9,-38,18,20,4); ctx.fill();
+  ctx.fillStyle='#1a0a0a';
+  ctx.beginPath(); ctx.roundRect(-9,-38,18,8,[5,5,0,0]); ctx.fill();
+  ctx.fillStyle='#1a1a1a';
+  ctx.fillRect(-5,-30,3,3); ctx.fillRect(2,-30,3,3);
+  ctx.fillStyle='#2C1A0E';
+  ctx.beginPath(); ctx.roundRect(-3,-42,6,5,2); ctx.fill();
+
+  ctx.restore();
+}
+
+function drawAlex(ctx, t) {
+  const bob = Math.sin(t*0.06)*1.5;
+  ctx.save();
+  ctx.translate(310, 242+bob);
+
+  // legs
+  ctx.fillStyle='#1a1a2e';
+  ctx.beginPath(); ctx.roundRect(-7,0,8,20,2); ctx.fill();
+  ctx.beginPath(); ctx.roundRect(2,0,8,20,2); ctx.fill();
+  ctx.fillStyle='#111';
+  ctx.beginPath(); ctx.roundRect(-8,18,10,6,2); ctx.fill();
+  ctx.beginPath(); ctx.roundRect(1,18,10,6,2); ctx.fill();
+
+  // body — gold shirt
+  ctx.fillStyle=GOLD;
+  ctx.beginPath(); ctx.roundRect(-11,-20,22,22,3); ctx.fill();
+  ctx.fillStyle=GOLD_D;
+  ctx.beginPath(); ctx.roundRect(-8,-17,16,3,1); ctx.fill();
+
+  // arms — one toward tablet
+  ctx.save();
+  ctx.translate(-14,-16); ctx.rotate(-0.4);
+  ctx.fillStyle=GOLD;
+  ctx.beginPath(); ctx.roundRect(0,0,7,16,3); ctx.fill();
+  ctx.fillStyle='#F0C090';
+  ctx.beginPath(); ctx.roundRect(-1,14,8,6,2); ctx.fill();
+  ctx.restore();
+
+  ctx.save();
+  ctx.translate(8,-16); ctx.rotate(0.3);
+  ctx.fillStyle=GOLD;
+  ctx.beginPath(); ctx.roundRect(0,0,7,16,3); ctx.fill();
+  ctx.fillStyle='#F0C090';
+  ctx.beginPath(); ctx.roundRect(-1,14,8,6,2); ctx.fill();
+  ctx.restore();
+
+  // head
+  ctx.fillStyle='#F0C090';
+  ctx.beginPath(); ctx.roundRect(-9,-38,18,20,4); ctx.fill();
+  ctx.fillStyle='#2C1A0E';
+  ctx.beginPath(); ctx.roundRect(-9,-38,18,9,[5,5,0,0]); ctx.fill();
+  ctx.fillStyle='#1a1a1a';
+  ctx.fillRect(-5,-30,4,3); ctx.fillRect(2,-30,4,3);
+  ctx.strokeStyle='#8B5E3C'; ctx.lineWidth=1.2; ctx.lineCap='round';
+  ctx.beginPath(); ctx.moveTo(-3,-22); ctx.quadraticCurveTo(0,-19,3,-22); ctx.stroke();
+  ctx.fillStyle='#2C1A0E';
+  ctx.beginPath(); ctx.roundRect(-3,-42,6,5,2); ctx.fill();
+
+  // screen glow from POS on face
+  ctx.fillStyle='rgba(100,200,100,0.1)';
+  ctx.beginPath(); ctx.ellipse(0,-28,10,7,0,0,Math.PI*2); ctx.fill();
+
+  ctx.restore();
+}
+
+function drawSunlight() {
+  // sunlight rays from top right (window)
+  const sunPulse = 0.85+0.15*Math.sin(t*0.02);
+  ctx.save();
+  ctx.globalAlpha=0.04*sunPulse;
+  [[580,0,520,290],[620,0,560,290],[640,0,600,290]].forEach(([x1,y1,x2,y2])=>{
+    const grad = ctx.createLinearGradient(x1,y1,x2,y2);
+    grad.addColorStop(0,'rgba(255,220,150,0.8)');
+    grad.addColorStop(1,'rgba(255,220,150,0)');
+    ctx.fillStyle=grad;
+    ctx.beginPath();
+    ctx.moveTo(x1-20,y1); ctx.lineTo(x1+20,y1);
+    ctx.lineTo(x2+40,y2); ctx.lineTo(x2-40,y2);
+    ctx.closePath(); ctx.fill();
+  });
+  ctx.globalAlpha=1;
+  ctx.restore();
+}
+
+function drawWindow2() {
+  ctx.save();
+  ctx.translate(560,40);
+  // frame
+  ctx.fillStyle='#3a2810';
+  ctx.beginPath(); ctx.roundRect(0,0,90,120,3); ctx.fill();
+  // sky outside
+  ctx.fillStyle='#a8d4f0';
+  ctx.fillRect(5,5,80,110);
+  // clouds
+  [20,55].forEach((cx,i)=>{
+    const cy=15+i*25;
+    ctx.fillStyle=`rgba(255,255,255,${0.8+0.1*Math.sin(t*0.02+i)})`;
+    ctx.beginPath(); ctx.ellipse(cx,cy,18,8,0,0,Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.ellipse(cx+12,cy-3,12,7,0,0,Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.ellipse(cx-10,cy-2,10,6,0,0,Math.PI*2); ctx.fill();
+  });
+  // outside street glimpse
+  ctx.fillStyle='#8a9a7a';
+  ctx.fillRect(5,80,80,35);
+  ctx.fillStyle='#6a7a5a'; ctx.fillRect(5,95,80,20);
+  // cross pane
+  ctx.strokeStyle='#3a2810'; ctx.lineWidth=3;
+  ctx.beginPath(); ctx.moveTo(50,5); ctx.lineTo(50,115); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(5,62); ctx.lineTo(85,62); ctx.stroke();
+  // sunlight from window
+  ctx.fillStyle='rgba(255,220,150,0.15)';
+  ctx.beginPath(); ctx.roundRect(5,5,80,110,0); ctx.fill();
+  ctx.restore();
+}
+
+function drawDisplayTable() {
+  // front display table with featured books
+  ctx.fillStyle='#3a2810';
+  ctx.beginPath(); ctx.roundRect(100,260,180,30,3); ctx.fill();
+  ctx.fillStyle='#4a3818';
+  ctx.beginPath(); ctx.roundRect(100,260,180,8,3); ctx.fill();
+  // books flat on table
+  const displayBooks=[
+    {x:110,w:30,h:20,c:'#C8A97E',title:''},
+    {x:145,w:25,h:20,c:'#4a6aaa',title:''},
+    {x:174,w:28,h:20,c:'#7a4aaa',title:''},
+    {x:206,w:26,h:20,c:'#4a8a5a',title:''},
+    {x:236,w:30,h:20,c:'#aa5a4a',title:''},
+  ];
+  displayBooks.forEach(b=>{
+    ctx.fillStyle=b.c;
+    ctx.beginPath(); ctx.roundRect(b.x,242,b.w,b.h,2); ctx.fill();
+    ctx.strokeStyle='rgba(0,0,0,0.3)'; ctx.lineWidth=0.5; ctx.stroke();
+  });
+}
+
+function loop() {
+  ctx.clearRect(0,0,W,H);
+  drawBackground();
+  drawSunlight();
+  drawWindow2();
+
+  // bookshelves left and right
+  drawBookshelf(ctx, 10, 40, 90, 230);
+  drawBookshelf(ctx, 110, 40, 90, 180);
+  drawBookshelf(ctx, 480, 40, 90, 180);
+  drawBookshelf(ctx, 580, 40, 90, 230);
+
+  // store sign on wall
+  ctx.fillStyle='#2C1A0E';
+  ctx.beginPath(); ctx.roundRect(200,20,280,38,4); ctx.fill();
+  ctx.strokeStyle=GOLD_D; ctx.lineWidth=1; ctx.strokeRect(200,20,280,38);
+  ctx.fillStyle=GOLD;
+  ctx.font='bold 18px Georgia, serif';
+  ctx.textAlign='center';
+  ctx.letterSpacing='3px';
+  ctx.fillText('AMEYA BOOKS', 340, 46);
+  ctx.letterSpacing='0px';
+  // decorative lines on sign
+  ctx.strokeStyle=GOLD_D; ctx.lineWidth=0.5;
+  ctx.beginPath(); ctx.moveTo(210,32); ctx.lineTo(280,32); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(400,32); ctx.lineTo(470,32); ctx.stroke();
+
+  drawDisplayTable();
+  drawCounter(ctx, t);
+  drawAlex(ctx, t);
+  drawCustomer(ctx, t);
+
+  // hanging price tags
+  [[155,180],[520,180]].forEach(([px,py])=>{
+    ctx.strokeStyle='rgba(200,169,126,0.3)'; ctx.lineWidth=0.8;
+    ctx.beginPath(); ctx.moveTo(px,py-10); ctx.lineTo(px,py+6); ctx.stroke();
+    ctx.fillStyle='rgba(60,40,20,0.8)';
+    ctx.beginPath(); ctx.roundRect(px-12,py+6,24,14,2); ctx.fill();
+    ctx.fillStyle=GOLD; ctx.globalAlpha=0.7;
+    ctx.font='7px sans-serif'; ctx.textAlign='center';
+    ctx.fillText('NEW IN',px,py+16);
+    ctx.globalAlpha=1;
+  });
+
+  // warm vignette
+  const vig = ctx.createRadialGradient(W/2,H/2,100,W/2,H/2,380);
+  vig.addColorStop(0,'rgba(0,0,0,0)');
+  vig.addColorStop(1,'rgba(0,0,0,0.6)');
+  ctx.fillStyle=vig; ctx.fillRect(0,0,W,H);
+
+  // label
+  ctx.fillStyle='rgba(200,169,126,0.9)';
+  ctx.font='500 13px system-ui, sans-serif';
+  ctx.textAlign='center';
+  ctx.fillText('Ameya Books  ·  Delhi  ·  2026', 340, 322);
+  ctx.fillStyle='rgba(150,120,80,0.8)';
+  ctx.font='11px system-ui, sans-serif';
+  ctx.fillText('Hybrid ·  Working in office', 340, 340);
+
+  t++;
+  requestAnimationFrame(loop);
+}
+loop();
+</script>

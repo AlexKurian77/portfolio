@@ -11,14 +11,15 @@ gsap.registerPlugin(ScrollTrigger);
 interface LaptopRefs {
   groupRef: React.RefObject<THREE.Group | null>;
   lidRef: React.RefObject<THREE.Group | null>;
-  screenHtmlRef: React.RefObject<HTMLDivElement | null>;
+  screenHtmlRef?: React.RefObject<HTMLDivElement | null>;
+  disableScroll?: boolean;
 }
 
-export function useLaptopScroll({ groupRef, lidRef }: LaptopRefs) {
+export function useLaptopScroll({ groupRef, lidRef, disableScroll }: LaptopRefs) {
   const timelineRef = useRef<gsap.core.Timeline | null>(null);
 
   useEffect(() => {
-    if (!groupRef.current || !lidRef.current) return;
+    if (!groupRef.current || !lidRef.current || disableScroll) return;
 
     const group = groupRef.current;
     const lid = lidRef.current;

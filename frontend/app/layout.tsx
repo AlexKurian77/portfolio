@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Script from "next/script";
+import CustomCursor from "@/components/ui/CustomCursor";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -32,6 +33,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
+        <CustomCursor />
         {children}
         <Script src="https://www.googletagmanager.com/gtag/js?id=G-KX30PJP8V5" strategy="afterInteractive" />
         <Script id="google-analytics" strategy="afterInteractive">

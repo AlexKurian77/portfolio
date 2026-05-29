@@ -12,7 +12,6 @@ const LaptopScene = dynamic(() => import("@/components/laptop/LaptopScene"), {
 });
 
 import Preloader from "@/components/ui/Preloader";
-import CustomCursor from "@/components/ui/CustomCursor";
 import SectionLabel from "@/components/ui/SectionLabel";
 import NavDots from "@/components/ui/NavDots";
 import Hero from "@/components/sections/Hero";
@@ -59,9 +58,6 @@ export default function Home() {
     <>
       {/* Preloader */}
       {!isLoaded && <Preloader onComplete={handlePreloaderComplete} />}
-
-      {/* Custom cursor (desktop only) */}
-      {isLoaded && <CustomCursor />}
 
       {/* 3D Laptop Scene - fixed, behind everything (desktop only) */}
       {isLoaded && !isMobile && (
@@ -161,7 +157,7 @@ export default function Home() {
             alignItems: "center",
           }}
         >
-          <Experience isActive={currentPhase === "experience"} />
+          <Experience isActive={currentPhase === "experience"} onHover={handleProjectHover} />
         </div>
 
         {/* Phase 5: Projects */}

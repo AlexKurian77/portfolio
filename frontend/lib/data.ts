@@ -51,11 +51,11 @@ export const projects: Project[] = [
 // ── Experience ────────────────────────────────────────────────────
 export const experiences: Experience[] = [
   {
-    id: 'ameya',
+    id: 'ameya-books',
     company: 'Ameya Books',
     role: 'Full Stack Developer',
     duration: 'Jan 2026 - Apr 2026',
-    location: 'Hybrid, Ghaziabad',
+    location: 'Hybrid, Delhi',
     description: [
       'Built a cross-platform React Native app for real-time inventory and sales with live Firestore synchronization.',
       'Developed an Express.js backend with Firebase RBAC, automating invoicing (PDFKit) and integrating cloud storage and payments.',
@@ -64,23 +64,23 @@ export const experiences: Experience[] = [
   {
     id: 'appyard',
     company: 'AppYard Technologies',
-    role: 'React Developer Intern',
+    role: 'React Development Intern',
     duration: 'May 2025 - Jul 2025',
     location: 'Remote, Bengaluru',
     description: [
-      'Engineered 15+ reusable React components across 4 product screens, reducing UI dev time by 30%.',
-      'Delivered 3 sprint features end-to-end integrating REST APIs, cutting reported UI bugs by 40% post-release.',
+      'Architected and developed three interconnected mobile applications from scratch using React Native, Expo, and Redux Toolkit.',
+      'Built and shipped six production web applications spanning live video streaming, webinar portals, and AI backends.',
     ],
   },
   {
     id: 'refactore',
     company: 'Refactore HU',
-    role: 'Software Engineering Intern',
+    role: 'Web Development Intern',
     duration: 'May 2024 - July 2024',
     location: 'Remote, Warsaw, Poland',
     description: [
-      'Developed full-stack features using Node.js, PHP, and MySQL with a focus on API and schema design.',
-      'Reduced query execution time by optimizing 8+ MySQL stored procedures and indexes, improving API response by ~35%.',
+      'Built the web presence for EXIST, a large-scale electronic music event brand hosting warehouse raves across Poland.',
+      'Developed a full-stack event booking and ticketing platform serving an active community using React, PHP, and MySQL.',
     ],
   },
 ];
@@ -214,3 +214,120 @@ export const socialLinks = [
 
 // ── Bio Text ──────────────────────────────────────────────────────
 export const bioText = `BCA finalist with 3 internships across full-stack and mobile development. Shipped production systems in React Native, Next.js, FastAPI, and Firebase. I love building AI-integrated products and have hands-on experience as a hackathon winner.`;
+
+// ── Detailed Experiences ──────────────────────────────────────────
+export const detailedExperiences = [
+  {
+    id: "ameya-books",
+    company: "Ameya Books",
+    link:"https://www.ameyabooks.in",
+    role: "Full Stack Developer",
+    duration: "Jan 2026 - Apr 2026",
+    location: "Hybrid, Delhi",
+    overview:
+      "Ameya Books is a comprehensive system designed to streamline the process of purchasing school book bundles. The business model revolves around working closely with schools to provide curated, exact book sets, notebooks, and stationery for students from Nursery to Higher Secondary classes. To support this operation, the project uses a modern web and mobile technology stack divided into four main components.",
+    achievements: [],
+    management:
+      "The repository covers the entire lifecycle of the business: a marketing website to draw in customers, a mobile app for parents/staff interactions, a robust admin panel to manage inventory and staff, and a secure backend handling Firebase data, receipts, and payment processing.",
+    techStack: ["Next.js", "React Native", "Expo", "Node.js", "Express", "Firebase", "Tailwind CSS"],
+    sections: [
+      {
+        title: "Public Website",
+        link:"https://www.ameyabooks.in/",
+        description: "The customer-facing landing page where parents and schools can learn about Ameya Books.",
+        techStack: ["Next.js", "Tailwind CSS", "Framer Motion", "Lucide React"],
+        features: [
+          "A premium, visually appealing marketing site that highlights core pillars: curated bundles tailored to school curriculums, complete kits with stationery, and quality assurance."
+        ]
+      },
+      {
+        title: "Admin Dashboard",
+        description: "An internal management portal strictly for administrators to manage the back-office operations.",
+        techStack: ["React (Vite)", "React Router", "Tailwind CSS", "Firebase", "@dnd-kit"],
+        features: [
+          "Inventory management for books and bundles.",
+          "Tracking system for transactions and monitoring analytics.",
+          "Academic year management (allowing admins to clone seasons for upcoming school years).",
+          "Staff authorization and settings management.",
+          "Strict Firebase authentication (Email/Password & Google OAuth) to ensure only authorized admin roles can log in."
+        ]
+      },
+      {
+        title: "Mobile App Frontend",
+        description: "A mobile application built for parents to make purchases and track orders, and for staff members to facilitate operations.",
+        techStack: ["React Native", "Expo", "NativeWind", "Firebase", "Axios"],
+        features: [
+          "Cross-platform support (Android, iOS, and Web via Expo Router).",
+          "QR code scanning capabilities.",
+          "Google Sign-in integration for easy user authentication.",
+          "Deep integration with the backend for fetching catalog data and displaying transactions."
+        ]
+      },
+      {
+        title: "Backend API",
+        description: "The core server that acts as the bridge between the database, external services, and the frontends.",
+        techStack: ["Node.js", "Express", "Firebase Admin SDK", "Vercel Blob"],
+        features: [
+          "Receipt System: Hosts dynamic, secure short links. Parents must verify their 10-digit phone number against the transaction record for privacy.",
+          "Secure APK Distribution: Includes a passcode-protected endpoint to let staff safely download the mobile app's APK directly from Vercel Blob storage.",
+          "Authentication Middleware: Verifies Firebase tokens to determine if a request is coming from an authorized Staff or Admin.",
+          "Payments: Infrastructure to support integrations with Paytm and South Indian Bank (SIB) dynamic UPI QR code generation and status polling."
+        ]
+      }
+    ]
+  },
+  {
+    id: "appyard",
+    company: "AppYard Technologies",
+    link:"https://appyard.in/",
+    role: "React Development Intern",
+    duration: "May 2025 - Jul 2025",
+    location: "Remote, Bengaluru",
+    overview:
+      "At Appyard, I worked across the full product surface — building and shipping six web applications and a three-app React Native mobile ecosystem, independently and end-to-end.",
+    achievements: [],
+    management: "",
+    techStack: ["React", "React Native", "Expo", "Vite", "Node.js", "Express", "Firebase", "Redux Toolkit", "Tailwind CSS", "GSAP", "Framer Motion", "Ant Design", "HLS.js", "OpenAI API", "Axios"],
+    sections: [
+      {
+        title: "Mobile Development (React Native / Expo)",
+        description: "Architected and developed three interconnected mobile applications from scratch: a consumer-facing service booking app, a partner/provider management app, and an internal push notification utility.",
+        techStack: ["React Native", "Expo Router", "Redux Toolkit", "Firebase", "NativeWind", "Reanimated"],
+        features: [
+          "Implemented real-time job queues, dynamic checkout flows, and a partner analytics dashboard with chart visualisations.",
+          "Integrated deep linking, location services, and camera capabilities.",
+          "Standardised UI across all three apps for 60fps interactions."
+        ]
+      },
+      {
+        title: "Web & Full-Stack Development (React / Vite / Node.js)",
+        description: "Built and shipped six production web applications spanning various domains.",
+        techStack: ["React", "Vite", "Node.js", "Express", "GSAP", "OpenAI", "HLS.js"],
+        features: [
+          "Live video streaming with adaptive HLS playback.",
+          "Multi-page webinar registration and scheduling portals with third-party calendar API integrations.",
+          "Content-rich media browsing interfaces and a corporate marketing site with GSAP-powered scroll animations and micro-interactions.",
+          "Conversational AI backend using OpenAI and Firebase Admin, and a client-side PDF compression utility."
+        ]
+      }
+    ]
+  },
+  {
+    id: "refactore",
+    company: "Refactore HU",
+    link:"https://exist.pl/",
+    role: "Web Development Intern",
+    duration: "May 2024 - July 2024",
+    location: "Remote, Warsaw, Poland",
+    overview:
+      "During my international internship at Refactore HU in Warsaw, I contributed to building the web presence for EXIST - a Warsaw-born large-scale electronic music event brand with a global following, hosting high-production warehouse raves across Poland with internationally curated lineups.",
+    achievements: [
+      "Engineered a dynamic frontend for EXIST's event discovery and checkout flows using React and vanilla web technologies, creating a seamless, immersive ticket purchasing experience tailored for high-traffic drops.",
+      "Architected the backend booking management system and server-side logic in PHP to securely process user registrations, manage dynamic ticket inventories, and enforce real-time event capacity limits.",
+      "Designed and optimized a relational MySQL database to maintain complex event schemas, ensuring reliable transaction handling and data integrity during peak checkout surges.",
+      "Successfully shipped the custom ticketing infrastructure to production, directly serving an international electronic music community and enabling the brand to operate independently of third-party vendors."
+    ],
+    management: "",
+    techStack: ["React", "PHP", "MySQL"],
+  },
+];

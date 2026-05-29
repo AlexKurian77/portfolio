@@ -1,0 +1,314 @@
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+.stage { width: 100%; height: 360px; background: #0a0a0a; overflow: hidden; position: relative; }
+</style>
+<div class="stage">
+<canvas id="c" width="680" height="360" style="width:100%;height:100%;display:block;"></canvas>
+</div>
+<script>
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+const W=680, H=360;
+let t=0;
+
+if (!CanvasRenderingContext2D.prototype.roundRect) {
+  CanvasRenderingContext2D.prototype.roundRect = function(x,y,w,h,r){
+    const rr=typeof r==='number'?[r,r,r,r]:r;
+    this.beginPath();
+    this.moveTo(x+rr[0],y);this.lineTo(x+w-rr[1],y);
+    this.quadraticCurveTo(x+w,y,x+w,y+rr[1]);this.lineTo(x+w,y+h-rr[2]);
+    this.quadraticCurveTo(x+w,y+h,x+w-rr[2],y+h);this.lineTo(x+rr[3],y+h);
+    this.quadraticCurveTo(x,y+h,x,y+h-rr[3]);this.lineTo(x,y+rr[0]);
+    this.quadraticCurveTo(x,y,x+rr[0],y);this.closePath();
+  };
+}
+
+const GOLD='#C8A97E', GOLD_D='#8B6B3D';
+
+function drawTapestry(ctx) {
+  ctx.save();
+  ctx.translate(220, 10);
+  // bg
+  ctx.fillStyle='#050510';
+  ctx.beginPath(); ctx.roundRect(0,0,200,160,4); ctx.fill();
+
+  // neon green blobs
+  ctx.fillStyle='rgba(0,200,60,0.18)';
+  ctx.beginPath(); ctx.ellipse(40,40,50,40,0,0,Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(160,120,45,35,0.5,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle='rgba(0,255,80,0.12)';
+  ctx.beginPath(); ctx.ellipse(100,80,60,50,0,0,Math.PI*2); ctx.fill();
+
+  // purple splatter
+  ctx.fillStyle='rgba(140,0,200,0.2)';
+  ctx.beginPath(); ctx.ellipse(150,40,40,35,0.3,0,Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(60,130,35,30,0,0,Math.PI*2); ctx.fill();
+
+  // skeleton silhouette
+  const sc = ctx.createLinearGradient(80,20,120,150);
+  sc.addColorStop(0,'rgba(180,220,255,0.7)');
+  sc.addColorStop(1,'rgba(140,180,220,0.4)');
+  ctx.strokeStyle=sc; ctx.lineWidth=2; ctx.lineCap='round';
+
+  // skull
+  ctx.fillStyle='rgba(200,220,255,0.5)';
+  ctx.beginPath(); ctx.ellipse(100,45,18,20,0,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle='rgba(5,5,20,0.8)';
+  ctx.beginPath(); ctx.ellipse(93,46,5,6,0,0,Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(107,46,5,6,0,0,Math.PI*2); ctx.fill();
+  // jaw
+  ctx.strokeStyle='rgba(200,220,255,0.5)'; ctx.lineWidth=1.5;
+  ctx.beginPath(); ctx.arc(100,54,10,0.2,Math.PI-0.2); ctx.stroke();
+  [93,97,101,105].forEach(x => {
+    ctx.beginPath(); ctx.moveTo(x,56); ctx.lineTo(x,62); ctx.stroke();
+  });
+
+  // ribcage
+  ctx.strokeStyle='rgba(180,210,255,0.45)'; ctx.lineWidth=1.5;
+  ctx.beginPath(); ctx.moveTo(100,65); ctx.lineTo(100,115); ctx.stroke();
+  [0,8,16,24,32].forEach((dy,i) => {
+    const w2 = 18 - i*2;
+    ctx.beginPath(); ctx.moveTo(100,70+dy); ctx.bezierCurveTo(100-w2,70+dy,100-w2-4,76+dy,100-w2,80+dy); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(100,70+dy); ctx.bezierCurveTo(100+w2,70+dy,100+w2+4,76+dy,100+w2,80+dy); ctx.stroke();
+  });
+
+  // pelvis
+  ctx.fillStyle='rgba(160,200,255,0.25)';
+  ctx.beginPath(); ctx.ellipse(100,122,16,8,0,0,Math.PI*2); ctx.fill();
+
+  // arms
+  ctx.strokeStyle='rgba(180,210,255,0.35)'; ctx.lineWidth=2;
+  ctx.beginPath(); ctx.moveTo(84,70); ctx.bezierCurveTo(65,80,62,100,70,115); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(116,70); ctx.bezierCurveTo(135,80,138,100,130,115); ctx.stroke();
+
+  // legs
+  ctx.beginPath(); ctx.moveTo(93,128); ctx.bezierCurveTo(85,145,83,158,88,165); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(107,128); ctx.bezierCurveTo(115,145,117,158,112,165); ctx.stroke();
+
+  // neon glow flicker
+  const flick = 0.7 + 0.3*Math.sin(t*0.05);
+  ctx.strokeStyle=`rgba(0,255,100,${0.15*flick})`;
+  ctx.lineWidth=8; ctx.beginPath(); ctx.ellipse(100,80,40,60,0,0,Math.PI*2); ctx.stroke();
+
+  ctx.strokeStyle='#1a1a1a'; ctx.lineWidth=2;
+  ctx.strokeRect(0,0,200,160);
+  ctx.restore();
+}
+
+function drawBed(ctx) {
+  // bed frame
+  ctx.fillStyle='#2a1a0e';
+  ctx.beginPath(); ctx.roundRect(40,260,600,14,3); ctx.fill();
+
+  // mattress / sheets — striped like photo
+  ctx.fillStyle='#3a3028';
+  ctx.beginPath(); ctx.roundRect(40,274,600,80,2); ctx.fill();
+  const stripeColors=['#4a3a28','#382820','#3a3828','#2a2820','#4a3020'];
+  stripeColors.forEach((c,i)=>{
+    ctx.fillStyle=c;
+    ctx.fillRect(40+i*120, 274, 120, 80);
+  });
+  // sheet texture lines
+  ctx.strokeStyle='rgba(255,255,255,0.04)'; ctx.lineWidth=1;
+  for(let y=278;y<350;y+=8){
+    ctx.beginPath(); ctx.moveTo(40,y); ctx.lineTo(640,y); ctx.stroke();
+  }
+
+  // cables on bed
+  ctx.strokeStyle='#111'; ctx.lineWidth=2.5; ctx.lineCap='round';
+  ctx.beginPath(); ctx.moveTo(250,310); ctx.bezierCurveTo(290,320,350,315,400,325); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(390,310); ctx.bezierCurveTo(420,305,460,320,510,310); ctx.stroke();
+  ctx.strokeStyle='#1a1a1a'; ctx.lineWidth=1.5;
+  ctx.beginPath(); ctx.moveTo(300,320); ctx.bezierCurveTo(330,312,360,318,390,308); ctx.stroke();
+
+  // water bottle
+  ctx.fillStyle='#4a7a9a';
+  ctx.beginPath(); ctx.roundRect(555,265,12,30,3); ctx.fill();
+  ctx.fillStyle='rgba(180,220,255,0.2)';
+  ctx.fillRect(557,268,4,24);
+  ctx.fillStyle='#2a5a7a';
+  ctx.beginPath(); ctx.roundRect(554,263,14,5,2); ctx.fill();
+}
+
+function drawLaptop(ctx, x, y, angle, glowColor, glowIntensity) {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.rotate(angle);
+
+  // screen glow on surface
+  ctx.fillStyle=`rgba(${glowColor},${0.12*glowIntensity})`;
+  ctx.beginPath(); ctx.ellipse(0,10,45,12,0,0,Math.PI*2); ctx.fill();
+
+  // lid
+  ctx.fillStyle='#1a1a1a';
+  ctx.beginPath(); ctx.roundRect(-32,-42,64,40,3); ctx.fill();
+  ctx.strokeStyle='#333'; ctx.lineWidth=0.5; ctx.stroke();
+
+  // screen
+  ctx.fillStyle='#080d18';
+  ctx.beginPath(); ctx.roundRect(-28,-40,56,35,2); ctx.fill();
+
+  // screen content — code glow
+  const codeLines = [
+    {x:-24,w:40,c:`rgba(${glowColor},0.8)`},
+    {x:-24,w:25,c:'rgba(100,200,120,0.7)'},
+    {x:-24,w:48,c:`rgba(${glowColor},0.5)`},
+    {x:-24,w:18,c:'rgba(180,120,255,0.7)'},
+    {x:-24,w:35,c:'rgba(100,200,120,0.6)'},
+    {x:-24,w:42,c:`rgba(${glowColor},0.6)`},
+  ];
+  codeLines.forEach((l,i)=>{
+    ctx.fillStyle=l.c;
+    ctx.fillRect(l.x, -38+i*5.5, l.w*(0.9+0.1*Math.sin(t*0.1+i)), 2.5);
+  });
+
+  // cursor blink
+  if(Math.floor(t/18)%2===0){
+    ctx.fillStyle=`rgba(${glowColor},0.9)`;
+    ctx.fillRect(-24,-38+5*5.5,2,5);
+  }
+
+  // base
+  ctx.fillStyle='#222';
+  ctx.beginPath(); ctx.roundRect(-34,-2,68,6,2); ctx.fill();
+  ctx.fillStyle='#1a1a1a';
+  ctx.beginPath(); ctx.roundRect(-34,4,68,3,[0,0,2,2]); ctx.fill();
+
+  ctx.restore();
+}
+
+function legoSitting(ctx, x, y, shirtColor, hairColor, bob, lean, laptopX, laptopY) {
+  ctx.save();
+  ctx.translate(x, y+bob);
+
+  if(lean !== 0) { ctx.rotate(lean * Math.PI/180); }
+
+  // cross-legged legs
+  ctx.fillStyle='#1a1a1a';
+  // left leg going right
+  ctx.beginPath(); ctx.roundRect(-18,2,20,10,3); ctx.fill();
+  // right leg going left
+  ctx.beginPath(); ctx.roundRect(-2,2,20,10,3); ctx.fill();
+  // left foot
+  ctx.beginPath(); ctx.roundRect(0,8,12,8,3); ctx.fill();
+  // right foot
+  ctx.beginPath(); ctx.roundRect(-12,8,12,8,3); ctx.fill();
+
+  // body
+  ctx.fillStyle=shirtColor;
+  ctx.beginPath(); ctx.roundRect(-11,-18,22,22,3); ctx.fill();
+
+  // arms — one reaching toward laptop
+  ctx.fillStyle='#F0C090';
+  ctx.save();
+  ctx.translate(-14,-14);
+  ctx.rotate(-0.4);
+  ctx.fillStyle=shirtColor;
+  ctx.beginPath(); ctx.roundRect(0,0,7,14,3); ctx.fill();
+  ctx.fillStyle='#F0C090';
+  ctx.beginPath(); ctx.roundRect(-1,12,8,6,2); ctx.fill();
+  ctx.restore();
+
+  ctx.save();
+  ctx.translate(7,-14);
+  ctx.rotate(0.3);
+  ctx.fillStyle=shirtColor;
+  ctx.beginPath(); ctx.roundRect(0,0,7,14,3); ctx.fill();
+  ctx.fillStyle='#F0C090';
+  ctx.beginPath(); ctx.roundRect(-1,12,8,6,2); ctx.fill();
+  ctx.restore();
+
+  // head
+  ctx.fillStyle='#F0C090';
+  ctx.beginPath(); ctx.roundRect(-9,-36,18,20,4); ctx.fill();
+
+  // hair
+  ctx.fillStyle=hairColor;
+  ctx.beginPath(); ctx.roundRect(-9,-36,18,9,[5,5,0,0]); ctx.fill();
+
+  // eyes — looking down at laptop
+  ctx.fillStyle='#1a1a1a';
+  ctx.fillRect(-5,-28,3,3); ctx.fillRect(2,-28,3,3);
+
+  // stud on top
+  ctx.fillStyle=hairColor;
+  ctx.beginPath(); ctx.roundRect(-3,-40,6,5,2); ctx.fill();
+
+  ctx.restore();
+}
+
+function drawScene(t) {
+  // dark room
+  ctx.fillStyle='#0a080a'; ctx.fillRect(0,0,W,H);
+
+  // walls
+  ctx.fillStyle='#141014'; ctx.fillRect(0,0,W,250);
+  ctx.fillStyle='#0e0c0e'; ctx.fillRect(0,250,W,110);
+
+  // subtle wall lamp glow (right side)
+  ctx.fillStyle='rgba(200,180,120,0.06)';
+  ctx.beginPath(); ctx.ellipse(580,160,80,120,0,0,Math.PI*2); ctx.fill();
+
+  // floor
+  ctx.fillStyle='#0a0808'; ctx.fillRect(0,340,W,20);
+
+  // tapestry
+  drawTapestry(ctx);
+
+  // room corners dark vignette
+  const vig = ctx.createRadialGradient(W/2,H/2,100,W/2,H/2,400);
+  vig.addColorStop(0,'rgba(0,0,0,0)');
+  vig.addColorStop(1,'rgba(0,0,0,0.7)');
+  ctx.fillStyle=vig; ctx.fillRect(0,0,W,H);
+
+  // bed
+  drawBed(ctx);
+
+  // laptop glow on ceiling/wall from screens
+  const glowPulse = 0.8 + 0.2*Math.sin(t*0.06);
+  ctx.fillStyle=`rgba(80,120,200,${0.04*glowPulse})`;
+  ctx.beginPath(); ctx.ellipse(280,220,120,60,0,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle=`rgba(80,120,200,${0.03*glowPulse})`;
+  ctx.beginPath(); ctx.ellipse(520,240,80,40,0,0,Math.PI*2); ctx.fill();
+
+  // 4 friends sitting on bed
+  // friend 1 - far left, leaning over, teal shirt
+  legoSitting(ctx, 130, 270, '#2a5a7a', '#0a0a0a', Math.sin(t*0.04)*1.5, 15, 160, 240);
+  drawLaptop(ctx, 190, 295, -0.35, '80,140,255', glowPulse);
+
+  // friend 2 - second left, black shirt, your guy
+  legoSitting(ctx, 255, 268, '#1a1a1a', '#2C1A0E', Math.sin(t*0.04+1)*1.5, -8, 290, 245);
+  drawLaptop(ctx, 300, 292, 0.1, '80,140,255', glowPulse);
+
+  // friend 3 - center, black shirt, lit by screen
+  legoSitting(ctx, 380, 265, '#111', '#0a0a0a', Math.sin(t*0.04+2)*1.5, 0, 390, 242);
+  drawLaptop(ctx, 390, 290, 0, '100,160,255', glowPulse*1.2);
+
+  // friend 4 - right, blue shirt
+  legoSitting(ctx, 530, 270, '#3a4a6a', '#1a1a1a', Math.sin(t*0.04+3)*1.5, -5, 560, 248);
+  drawLaptop(ctx, 555, 296, -0.05, '80,130,220', glowPulse);
+
+  // screen glow on faces
+  ctx.fillStyle=`rgba(80,130,220,${0.15*glowPulse})`;
+  [130,255,380,530].forEach(x => {
+    ctx.beginPath(); ctx.ellipse(x, 248, 14, 10, 0, 0, Math.PI*2); ctx.fill();
+  });
+
+  // label
+  ctx.fillStyle='rgba(200,169,126,0.9)';
+  ctx.font='500 13px system-ui, sans-serif';
+  ctx.textAlign='center';
+  ctx.fillText('Refactore HU  ·  Warsaw  ·  2024', 340, 332);
+  ctx.fillStyle='rgba(100,90,80,0.9)';
+  ctx.font='11px system-ui, sans-serif';
+  ctx.fillText('Remote internship  ·  dark room', 340, 350);
+}
+
+function loop() {
+  drawScene(t);
+  t++;
+  requestAnimationFrame(loop);
+}
+loop();
+</script>
