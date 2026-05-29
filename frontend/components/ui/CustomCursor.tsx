@@ -63,6 +63,7 @@ export default function CustomCursor() {
     <>
       {/* Dot / Hover State */}
       <motion.div
+        className="hidden lg:flex"
         style={{
           position: "fixed",
           left: cursorX,
@@ -77,7 +78,6 @@ export default function CustomCursor() {
           transform: "translate(-50%, -50%)",
           transition:
             "width 0.3s cubic-bezier(0.16,1,0.3,1), height 0.3s cubic-bezier(0.16,1,0.3,1), background 0.3s",
-          display: "flex",
           alignItems: "center",
           justifyContent: "center",
         }}
@@ -101,6 +101,7 @@ export default function CustomCursor() {
       </motion.div>
       {/* Outer Ring */}
       <motion.div
+        className="hidden lg:block"
         style={{
           position: "fixed",
           left: cursorX,
