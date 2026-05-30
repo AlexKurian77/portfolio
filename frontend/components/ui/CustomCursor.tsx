@@ -1,14 +1,20 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { motion, useMotionValue, AnimatePresence } from "framer-motion";
 import { MousePointerClick } from "lucide-react";
 
 export default function CustomCursor() {
+  const pathname = usePathname();
   const [isHovering, setIsHovering] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const cursorX = useMotionValue(-100);
   const cursorY = useMotionValue(-100);
+
+  useEffect(() => {
+    setIsHovering(false);
+  }, [pathname]);
 
   useEffect(() => {
     // Only show on devices with fine pointers

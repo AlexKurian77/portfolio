@@ -228,7 +228,7 @@ export const detailedExperiences = [
       "Ameya Books is a comprehensive system designed to streamline the process of purchasing school book bundles. The business model revolves around working closely with schools to provide curated, exact book sets, notebooks, and stationery for students from Nursery to Higher Secondary classes. To support this operation, the project uses a modern web and mobile technology stack divided into four main components.",
     achievements: [],
     management:
-      "The repository covers the entire lifecycle of the business: a marketing website to draw in customers, a mobile app for parents/staff interactions, a robust admin panel to manage inventory and staff, and a secure backend handling Firebase data, receipts, and payment processing.",
+      "The repository covers the entire lifecycle of the business: a marketing website to draw in customers, a mobile app for staff interactions, a robust admin panel to manage inventory and staff, and a secure backend handling Firebase data, receipts, and payment processing.",
     techStack: ["Next.js", "React Native", "Expo", "Node.js", "Express", "Firebase", "Tailwind CSS"],
     sections: [
       {
@@ -253,7 +253,7 @@ export const detailedExperiences = [
         ]
       },
       {
-        title: "Mobile App Frontend",
+        title: "Mobile App",
         description: "A mobile application built for parents to make purchases and track orders, and for staff members to facilitate operations.",
         techStack: ["React Native", "Expo", "NativeWind", "Firebase", "Axios"],
         features: [
@@ -269,7 +269,7 @@ export const detailedExperiences = [
         techStack: ["Node.js", "Express", "Firebase Admin SDK", "Vercel Blob"],
         features: [
           "Receipt System: Hosts dynamic, secure short links. Parents must verify their 10-digit phone number against the transaction record for privacy.",
-          "Secure APK Distribution: Includes a passcode-protected endpoint to let staff safely download the mobile app's APK directly from Vercel Blob storage.",
+          "APK Distribution: Includes a passcode-protected endpoint to let staff download the mobile app's APK.",
           "Authentication Middleware: Verifies Firebase tokens to determine if a request is coming from an authorized Staff or Admin.",
           "Payments: Infrastructure to support integrations with Paytm and South Indian Bank (SIB) dynamic UPI QR code generation and status polling."
         ]
@@ -284,7 +284,7 @@ export const detailedExperiences = [
     duration: "May 2025 - Jul 2025",
     location: "Remote, Bengaluru",
     overview:
-      "At Appyard, I worked across the full product surface — building and shipping six web applications and a three-app React Native mobile ecosystem, independently and end-to-end.",
+      "At Appyard, I worked across the full product surface - building and shipping six web applications and a three-app React Native mobile ecosystem, independently and end-to-end.",
     achievements: [],
     management: "",
     techStack: ["React", "React Native", "Expo", "Vite", "Node.js", "Express", "Firebase", "Redux Toolkit", "Tailwind CSS", "GSAP", "Framer Motion", "Ant Design", "HLS.js", "OpenAI API", "Axios"],
