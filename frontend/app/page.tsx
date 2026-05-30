@@ -22,8 +22,11 @@ import Projects from "@/components/sections/Projects";
 import Contact from "@/components/sections/Contact";
 import Message from "@/components/sections/Message";
 
+let hasLoadedOnce = false;
+let savedScrollPosition = 0;
+
 export default function Home() {
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(hasLoadedOnce);
   const [activeProject, setActiveProject] = useState<string | null>(null);
   const [isMobile, setIsMobile] = useState(false);
   const { currentPhase } = useScrollProgress();
@@ -41,12 +44,31 @@ export default function Home() {
   // Initialize smooth scroll
   useEffect(() => {
     const lenis = initSmoothScroll();
+
+    if (savedScrollPosition > 0) {
+      setTimeout(() => {
+        window.scrollTo(0, savedScrollPosition);
+        lenis.scrollTo(savedScrollPosition, { immediate: true });
+      }, 100);
+    }
+
+    const saveScroll = () => {
+      if (window.scrollY > 0) {
+        savedScrollPosition = window.scrollY;
+      }
+    };
+    window.addEventListener("pointerdown", saveScroll);
+    window.addEventListener("keydown", saveScroll);
+
     return () => {
+      window.removeEventListener("pointerdown", saveScroll);
+      window.removeEventListener("keydown", saveScroll);
       destroySmoothScroll();
     };
   }, []);
 
   const handlePreloaderComplete = useCallback(() => {
+    hasLoadedOnce = true;
     setIsLoaded(true);
   }, []);
 

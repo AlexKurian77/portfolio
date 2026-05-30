@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import dynamic from "next/dynamic";
@@ -40,6 +40,7 @@ const itemVariants = {
 
 export default function ExperienceDetail() {
   const params = useParams();
+  const router = useRouter();
   const exp = detailedExperiences.find((e) => e.id === params.id);
   const [isMobile, setIsMobile] = useState(false);
   const [isHovering, setIsHovering] = useState(-1);
@@ -143,18 +144,27 @@ export default function ExperienceDetail() {
           transition={{ duration: 0.5 }}
           style={{ marginBottom: "4rem" }}
         >
-          <Link
-            href="/"
+          <button
+            onClick={() => {
+              if (window.history.length > 1 && document.referrer.includes(window.location.host)) {
+                router.back();
+              } else {
+                router.push("/");
+              }
+            }}
             className="inline-flex items-center gap-2 text-[#8A8A8A] hover:text-[#C8A97E] transition-colors duration-300"
             style={{
               fontFamily: "'Inter', sans-serif",
               fontSize: "14px",
               cursor: "pointer",
+              background: "none",
+              border: "none",
+              padding: 0,
             }}
           >
             <ArrowLeft size={16} />
             Back to Portfolio
-          </Link>
+          </button>
         </motion.div>
 
         {/* Header (No caged div) */}
