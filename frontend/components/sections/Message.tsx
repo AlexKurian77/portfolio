@@ -25,9 +25,10 @@ const itemVariants = {
 
 interface MessageProps {
   isActive: boolean;
+  isMobile?: boolean;
 }
 
-export default function Message({ isActive }: MessageProps) {
+export default function Message({ isActive, isMobile }: MessageProps) {
   const [formState, setFormState] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
   const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' });
 
@@ -75,8 +76,8 @@ export default function Message({ isActive }: MessageProps) {
     >
       <div className="w-full flex justify-center md:hidden">
         <motion.div
-          initial="hidden"
-        animate={isActive ? 'visible' : 'hidden'}
+          initial={isMobile ? 'visible' : 'hidden'}
+        animate={isActive || isMobile ? 'visible' : 'hidden'}
         variants={containerVariants}
         style={{
           width: '100%',

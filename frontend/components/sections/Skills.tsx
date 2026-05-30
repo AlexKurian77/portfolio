@@ -57,9 +57,10 @@ const headerVariants = {
 
 interface SkillsProps {
   isActive: boolean;
+  isMobile?: boolean;
 }
 
-export default function Skills({ isActive }: SkillsProps) {
+export default function Skills({ isActive, isMobile }: SkillsProps) {
   return (
     <section
       id="skills"
@@ -75,8 +76,8 @@ export default function Skills({ isActive }: SkillsProps) {
       }}
     >
       <motion.div
-        initial="hidden"
-        animate={isActive ? 'visible' : 'hidden'}
+        initial={isMobile ? 'visible' : 'hidden'}
+        animate={isActive || isMobile ? 'visible' : 'hidden'}
         variants={containerVariants}
         style={{
           maxWidth: '520px',
@@ -167,8 +168,8 @@ export default function Skills({ isActive }: SkillsProps) {
               {/* Skill tags */}
               <motion.div
                 variants={tagContainerVariants}
-                initial="hidden"
-                animate={isActive ? 'visible' : 'hidden'}
+                initial={isMobile ? 'visible' : 'hidden'}
+                animate={isActive || isMobile ? 'visible' : 'hidden'}
                 style={{
                   display: 'flex',
                   flexWrap: 'wrap',

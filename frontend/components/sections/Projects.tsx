@@ -27,9 +27,10 @@ const cardVariants = {
 interface ProjectsProps {
   isActive: boolean;
   onProjectHover: (projectId: string | null) => void;
+  isMobile?: boolean;
 }
 
-export default function Projects({ isActive, onProjectHover }: ProjectsProps) {
+export default function Projects({ isActive, onProjectHover, isMobile }: ProjectsProps) {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
@@ -99,8 +100,8 @@ export default function Projects({ isActive, onProjectHover }: ProjectsProps) {
 
       {/* Left side cards on desktop (laptop is right), full width mobile */}
       <motion.div
-        initial="hidden"
-        animate={isActive ? 'visible' : 'hidden'}
+        initial={isMobile ? 'visible' : 'hidden'}
+        animate={isActive || isMobile ? 'visible' : 'hidden'}
         variants={containerVariants}
         className="w-full md:w-auto md:ml-[6%]"
         style={{

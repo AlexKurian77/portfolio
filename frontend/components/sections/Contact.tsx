@@ -49,9 +49,10 @@ const icons: Record<string, React.ReactNode> = {
 
 interface ContactProps {
   isActive: boolean;
+  isMobile?: boolean;
 }
 
-export default function Contact({ isActive }: ContactProps) {
+export default function Contact({ isActive, isMobile }: ContactProps) {
   return (
     <section
       id="contact"
@@ -67,8 +68,8 @@ export default function Contact({ isActive }: ContactProps) {
       }}
     >
       <motion.div
-        initial="hidden"
-        animate={isActive ? 'visible' : 'hidden'}
+        initial={isMobile ? 'visible' : 'hidden'}
+        animate={isActive || isMobile ? 'visible' : 'hidden'}
         variants={containerVariants}
         style={{
           display: 'flex',

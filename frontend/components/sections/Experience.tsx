@@ -24,9 +24,10 @@ const cardVariants = {
 interface ExperienceProps {
   isActive: boolean;
   onHover?: (id: string | null) => void;
+  isMobile?: boolean;
 }
 
-export default function Experience({ isActive, onHover }: ExperienceProps) {
+export default function Experience({ isActive, onHover, isMobile }: ExperienceProps) {
   return (
     <section
       id="experience"
@@ -42,8 +43,8 @@ export default function Experience({ isActive, onHover }: ExperienceProps) {
       }}
     >
       <motion.div
-        initial="hidden"
-        animate={isActive ? 'visible' : 'hidden'}
+        initial={isMobile ? 'visible' : 'hidden'}
+        animate={isActive || isMobile ? 'visible' : 'hidden'}
         variants={containerVariants}
         className="w-full md:w-auto md:mr-[6%]"
         style={{

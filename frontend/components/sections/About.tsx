@@ -32,9 +32,10 @@ const itemVariants = {
 
 interface AboutProps {
   isActive: boolean;
+  isMobile?: boolean;
 }
 
-export default function About({ isActive }: AboutProps) {
+export default function About({ isActive, isMobile }: AboutProps) {
   return (
     <section
       id="about"
@@ -51,8 +52,8 @@ export default function About({ isActive }: AboutProps) {
     >
       {/* Content goes right on desktop (laptop is left), full width on mobile */}
       <motion.div
-        initial="hidden"
-        animate={isActive ? 'visible' : 'hidden'}
+        initial={isMobile ? 'visible' : 'hidden'}
+        animate={isActive || isMobile ? 'visible' : 'hidden'}
         variants={containerVariants}
         className="w-full md:w-auto md:mr-[6%]"
         style={{

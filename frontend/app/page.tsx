@@ -133,14 +133,14 @@ export default function Home() {
         style={{
           position: "relative",
           zIndex: 10,
-          height: `${SCROLL_HEIGHT_VH}vh`,
+          height: isMobile ? "auto" : `${SCROLL_HEIGHT_VH}vh`,
           pointerEvents: "none",
         }}
       >
         {/* Phase 1: Hero */}
         <div
           style={{
-            height: "10%",
+            height: isMobile ? "auto" : "10%",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -152,40 +152,40 @@ export default function Home() {
         {/* Phase 2: About */}
         <div
           style={{
-            height: "15%",
+            height: isMobile ? "auto" : "15%",
             display: "flex",
             alignItems: "center",
           }}
         >
-          <About isActive={currentPhase === "about"} />
+          <About isActive={currentPhase === "about"} isMobile={isMobile} />
         </div>
 
         {/* Phase 3: Skills */}
         <div
           style={{
-            height: "15%",
+            height: isMobile ? "auto" : "15%",
             display: "flex",
             alignItems: "center",
           }}
         >
-          <Skills isActive={currentPhase === "skills"} />
+          <Skills isActive={currentPhase === "skills"} isMobile={isMobile} />
         </div>
 
         {/* Phase 4: Experience */}
         <div
           style={{
-            height: "15%",
+            height: isMobile ? "auto" : "15%",
             display: "flex",
             alignItems: "center",
           }}
         >
-          <Experience isActive={currentPhase === "experience"} onHover={handleProjectHover} />
+          <Experience isActive={currentPhase === "experience"} onHover={handleProjectHover} isMobile={isMobile} />
         </div>
 
         {/* Phase 5: Projects */}
         <div
           style={{
-            height: "17%",
+            height: isMobile ? "auto" : "17%",
             display: "flex",
             alignItems: "center",
           }}
@@ -193,31 +193,32 @@ export default function Home() {
           <Projects
             isActive={currentPhase === "projects"}
             onProjectHover={handleProjectHover}
+            isMobile={isMobile}
           />
         </div>
 
         {/* Phase 6: Contact */}
         <div
           style={{
-            height: "13%",
+            height: isMobile ? "auto" : "13%",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
           }}
         >
-          <Contact isActive={currentPhase === "contact"} />
+          <Contact isActive={currentPhase === "contact"} isMobile={isMobile} />
         </div>
 
         {/* Phase 7: Message */}
         <div
           style={{
-            height: "15%",
+            height: isMobile ? "auto" : "15%",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
           }}
         >
-          <Message isActive={currentPhase === "message"} />
+          <Message isActive={currentPhase === "message"} isMobile={isMobile} />
         </div>
       </div>
     </>
