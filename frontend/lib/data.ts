@@ -292,7 +292,7 @@ export const detailedExperiences = [
       {
         title: "Mobile Development (React Native / Expo)",
         description: "Architected and developed three interconnected mobile applications from scratch: a consumer-facing service booking app, a partner/provider management app, and an internal push notification utility.",
-        techStack: ["React Native", "Expo Router", "Redux Toolkit", "Firebase", "NativeWind", "Reanimated"],
+        techStack: ["React Native", "Expo Router", "Redux Toolkit", "Firebase", "NativeWind"],
         features: [
           "Implemented real-time job queues, dynamic checkout flows, and a partner analytics dashboard with chart visualisations.",
           "Integrated deep linking, location services, and camera capabilities.",
@@ -302,12 +302,11 @@ export const detailedExperiences = [
       {
         title: "Web & Full-Stack Development (React / Vite / Node.js)",
         description: "Built and shipped six production web applications spanning various domains.",
-        techStack: ["React", "Vite", "Node.js", "Express", "GSAP", "OpenAI", "HLS.js"],
+        techStack: ["React", "Vite", "Node.js", "Express", "GSAP", "Axios"],
         features: [
-          "Live video streaming with adaptive HLS playback.",
+          "Live video streaming with adaptive playback.",
           "Multi-page webinar registration and scheduling portals with third-party calendar API integrations.",
           "Content-rich media browsing interfaces and a corporate marketing site with GSAP-powered scroll animations and micro-interactions.",
-          "Conversational AI backend using OpenAI and Firebase Admin, and a client-side PDF compression utility."
         ]
       }
     ]
