@@ -287,7 +287,7 @@ export const detailedExperiences = [
       "At Appyard, I worked across the full product surface - building and shipping six web applications and a three-app React Native mobile ecosystem, independently and end-to-end.",
     achievements: [],
     management: "",
-    techStack: ["React", "React Native", "Expo", "Vite", "Node.js", "Express", "Firebase", "Redux Toolkit", "Tailwind CSS", "GSAP", "Framer Motion", "Ant Design", "HLS.js", "OpenAI API", "Axios"],
+    techStack: ["React", "React Native", "Expo", "Vite", "Node.js", "Express", "Firebase", "Redux Toolkit", "Tailwind CSS", "GSAP", "Framer Motion", "Axios"],
     sections: [
       {
         title: "Mobile Development (React Native / Expo)",
