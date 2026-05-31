@@ -261,7 +261,7 @@ function HeroScreenContent() {
             {[
               { value: '3', label: 'Internships' },
               { value: '9.0', label: 'CGPA' },
-              { value: '3+', label: 'Projects' },
+              { value: '15+', label: 'Projects' },
             ].map((stat) => (
               <div key={stat.label} style={{ textAlign: 'center' }}>
                 <div
