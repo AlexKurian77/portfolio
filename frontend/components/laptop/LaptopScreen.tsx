@@ -26,7 +26,7 @@ function HeroScreenContent() {
     () => [
       { text: 'Loading profile...', delay: 400 },
       { text: 'Verifying credentials', delay: 600 },
-      { text: 'Mounting projects (3)', delay: 500 },
+      { text: 'Mounting projects', delay: 500 },
       { text: 'Syncing experience data', delay: 450 },
       { text: 'Initializing portfolio', delay: 700 },
     ],
