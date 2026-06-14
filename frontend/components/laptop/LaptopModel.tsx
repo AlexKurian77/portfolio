@@ -68,27 +68,27 @@ interface LaptopModelProps {
 
 const LaptopModel = forwardRef<THREE.Group, LaptopModelProps>(
   function LaptopModel({ lidRef, children }, ref) {
-    const bodyMaterial = new THREE.MeshStandardMaterial({
+    const bodyMaterial = useMemo(() => new THREE.MeshStandardMaterial({
       color: '#1a1a1a',
       metalness: 0.8,
       roughness: 0.3,
-    });
+    }), []);
 
-    const edgeMaterial = new THREE.MeshStandardMaterial({
+    const edgeMaterial = useMemo(() => new THREE.MeshStandardMaterial({
       color: '#C8A97E',
       metalness: 0.9,
       roughness: 0.2,
       emissive: '#C8A97E',
       emissiveIntensity: 0.1,
-    });
+    }), []);
 
-    const screenMaterial = new THREE.MeshStandardMaterial({
+    const screenMaterial = useMemo(() => new THREE.MeshStandardMaterial({
       color: '#0a1628',
       emissive: '#1A3A5C',
       emissiveIntensity: 0.3,
       metalness: 0.1,
       roughness: 0.9,
-    });
+    }), []);
 
     return (
       <group ref={ref}>

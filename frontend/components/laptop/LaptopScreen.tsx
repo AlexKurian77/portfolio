@@ -1480,11 +1480,12 @@ export default function LaptopScreen({
     const rotX = lidRef.current.rotation.x;
     const current = bootStateRef.current;
 
-    // Lid is fully open at 0, closed at -1.57
-    if (rotX > -0.05 && (current === "off" || current === "turning_off")) {
+    // Lid open threshold: well above Float wobble range
+    // Lid closed threshold: well below Float wobble range
+    if (rotX > -0.02 && current === "off") {
       setBootState("booting");
-    } else if (rotX < -0.1 && (current === "on" || current === "booting")) {
-      setBootState("off");
+    } else if (rotX < -0.3 && (current === "on" || current === "booting")) {
+      setBootState("turning_off");
     }
   });
 

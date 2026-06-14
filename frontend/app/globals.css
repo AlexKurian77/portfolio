@@ -82,7 +82,7 @@ body {
 
 /* ── Custom Cursor (desktop only) ─────────────────────────────── */
 @media (hover: hover) and (pointer: fine) {
-  * {
+  html.custom-cursor-active * {
     cursor: none !important;
   }
 }
