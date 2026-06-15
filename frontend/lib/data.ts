@@ -3,6 +3,17 @@ import { Project, SkillCategory, Milestone, Experience } from '@/types';
 // ── Projects ──────────────────────────────────────────────────────
 export const projects: Project[] = [
   {
+    id: 'knowiki',
+    name: 'KnoWiki',
+    tagline: 'Versioned Knowledgebase for AI Agents',
+    description:
+      'A versioned knowledgebase platform for AI-driven development. Compiles raw sources (repos, logs, docs) into a structured, queryable knowledge layer with automated health checks, contradiction detection, and agent-readable context handoffs.',
+    url: 'https://www.knowiki.in/',
+    stack: ['Next.js', 'Python'],
+    image: '/images/projects/knowiki.png',
+    color: '#C8A97E',
+  },
+  {
     id: 'carma',
     name: 'CARMA',
     tagline: 'Carbon & Air Research Analysis',

@@ -33,25 +33,25 @@ export const LAPTOP_KEYFRAMES = {
   // Phase 2: About - drift left, shrink
   about: {
     position: { x: -1.2, y: 0.5, z: 0 },
-    scale: 0.55,
+    scale: 0.6,
     lidRotation: 0,
   },
   // Phase 3: Skills - drift right
   skills: {
     position: { x: 1.5, y: 0.6, z: 0 },
-    scale: 0.55,
+    scale: 0.6,
     lidRotation: 0,
   },
   // Phase 4: Experience - drift left
   experience: {
     position: { x: -1.2, y: 0.5, z: 0 },
-    scale: 0.55,
+    scale: 0.6,
     lidRotation: 0,
   },
   // Phase 5: Projects - drift right
   projects: {
     position: { x: 1.5, y: 0.5, z: 0 },
-    scale: 0.55,
+    scale: 0.6,
     lidRotation: 0,
   },
   // Phase 6: Contact - center, shrink, close lid

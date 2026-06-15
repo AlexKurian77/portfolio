@@ -823,6 +823,21 @@ function ProjectIdleScreen() {
   const codeSnippets = useMemo(
     () => [
       {
+        file: "knowiki",
+        lines: [
+          { text: "export interface KBConfig {", color: "#C792EA" },
+          { text: "  schema: SchemaDefinition;", color: "#82AAFF" },
+          { text: "  ingestion: IngestionLayer;", color: "#82AAFF" },
+          { text: "  governance: {", color: "#F0EDE6" },
+          { text: "    checks: ['staleness', 'contradictions'];", color: "#C3E88D" },
+          { text: "  }", color: "#F0EDE6" },
+          { text: "}", color: "#C792EA" },
+          { text: "", color: "#546E7A" },
+          { text: "// Compile KB for agents", color: "#546E7A" },
+          { text: "const kb = compile(config);", color: "#FFCB6B" },
+        ],
+      },
+      {
         file: "carma",
         lines: [
           { text: "export default function CARMA() {", color: "#C792EA" },
@@ -861,6 +876,22 @@ function ProjectIdleScreen() {
           { text: "", color: "#546E7A" },
           { text: "// Causal graph engine", color: "#546E7A" },
           { text: "const engine = new CGE();", color: "#FFCB6B" },
+        ],
+      },
+      {
+        file: "resolve",
+        lines: [
+          { text: "const ChatBot = () => {", color: "#C792EA" },
+          { text: "  const [messages, setMessages] = useState([]);", color: "#82AAFF" },
+          { text: "  const gemini = useGeminiAI();", color: "#82AAFF" },
+          { text: "", color: "#546E7A" },
+          { text: "  // PDI support system", color: "#546E7A" },
+          { text: "  const handleSend = async (text: string) => {", color: "#C792EA" },
+          { text: "    const res = await gemini.chat(text);", color: "#FFCB6B" },
+          { text: "    setMessages(m => [...m, res]);", color: "#F0EDE6" },
+          { text: "  };", color: "#C792EA" },
+          { text: "  return <Chat msg={messages} onSend={handleSend} />;", color: "#C3E88D" },
+          { text: "};", color: "#C792EA" },
         ],
       },
     ],
@@ -943,6 +974,7 @@ function ProjectIdleScreen() {
           <div
             key={file}
             onClick={() => switchToTab(i)}
+            data-cursor="pointer"
             style={{
               padding: "3px 10px",
               fontSize: "8px",
@@ -993,6 +1025,7 @@ function ProjectIdleScreen() {
             <div
               key={file}
               onClick={() => switchToTab(i)}
+              data-cursor="pointer"
               style={{
                 fontSize: "7px",
                 color: i === snippetIdx ? "#C8A97E" : "#6e7681",
@@ -1114,7 +1147,7 @@ function ProjectIdleScreen() {
             Ln {visibleLines + 1}, Col {charIdx + 1}
           </span>
           <span style={{ fontSize: "6px", color: "#484f58" }}>
-            {currentSnippet.file === "carma"
+            {currentSnippet.file === "carma" || currentSnippet.file === "resolve"
               ? "TypeScript React"
               : currentSnippet.file === "helix"
                 ? "Python"
